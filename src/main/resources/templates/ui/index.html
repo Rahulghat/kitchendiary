@@ -14,8 +14,29 @@
         </div>
         <h1>KitchenDiary Console</h1>
         <p>Manage businesses, platforms, orders, expenses, and dashboard metrics.</p>
-        <p><a th:href="@{/ui/mr(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category})}">मराठी UI</a></p>
+        <p>
+            <a th:href="@{/ui/mr(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category})}">मराठी UI</a>
+            |
+            <a th:href="@{/ui/hi(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category})}">हिंदी UI</a>
+        </p>
     </header>
+
+    <section class="fancy-banner">
+        <div class="banner-copy">
+            <p class="eyebrow">Kitchen Performance Hub</p>
+            <h2>Track every rupee from order to profit</h2>
+            <p>Real-time order economics, expense control, and payout mismatch visibility in one dashboard.</p>
+            <div class="banner-tags">
+                <span>Smart Ledger</span>
+                <span>Daily Profit Pulse</span>
+                <span>Invoice Ready</span>
+            </div>
+        </div>
+        <div class="banner-badge">
+            <strong>24x7</strong>
+            <small>Business Insight</small>
+        </div>
+    </section>
 
     <div class="alert ok" th:if="${message != null and !message.isBlank()}" th:text="${message}"></div>
     <div class="alert err" th:if="${error != null and !error.isBlank()}" th:text="${error}"></div>

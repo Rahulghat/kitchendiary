@@ -50,7 +50,12 @@
             परत जा
         </a>
         <a class="button-link"
-           th:if="${lang != 'mr'}"
+           th:if="${lang == 'hi'}"
+           th:href="@{/ui/hi(userId=${userId},businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
+            वापस जाएं
+        </a>
+        <a class="button-link"
+           th:if="${lang != 'mr' and lang != 'hi'}"
            th:href="@{/ui(userId=${userId},businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
             Back to Console
         </a>

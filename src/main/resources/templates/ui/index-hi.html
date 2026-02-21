@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="mr" xmlns:th="http://www.thymeleaf.org">
+<html lang="hi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KitchenDiary कन्सोल</title>
+    <title>KitchenDiary कंसोल</title>
     <link rel="stylesheet" href="/ui.css">
 </head>
 <body>
@@ -12,20 +12,20 @@
         <div class="brand">
             <img src="/kitchendiary-logo.svg" alt="KitchenDiary logo">
         </div>
-        <h1>KitchenDiary कन्सोल</h1>
-        <p>व्यवसाय, प्लॅटफॉर्म, ऑर्डर, खर्च आणि डॅशबोर्ड मेट्रिक्स व्यवस्थापित करा.</p>
+        <h1>KitchenDiary कंसोल</h1>
+        <p>बिज़नेस, प्लेटफॉर्म, ऑर्डर, खर्च और डैशबोर्ड मैट्रिक्स एक ही जगह पर मैनेज करें।</p>
         <p>
             <a th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category})}">English UI</a>
             |
-            <a th:href="@{/ui/hi(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category})}">हिंदी UI</a>
+            <a th:href="@{/ui/mr(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category})}">मराठी UI</a>
         </p>
     </header>
 
     <section class="fancy-banner">
         <div class="banner-copy">
             <p class="eyebrow">Kitchen Performance Hub</p>
-            <h2>प्रत्येक ऑर्डरपासून नफ्यापर्यंत अचूक ट्रॅकिंग</h2>
-            <p>ऑर्डर इकॉनॉमिक्स, खर्च नियंत्रण आणि पेआउट तफावत एका सुंदर डॅशबोर्डमध्ये.</p>
+            <h2>हर ऑर्डर से मुनाफ़े तक पूरी ट्रैकिंग</h2>
+            <p>ऑर्डर इकॉनॉमिक्स, खर्च नियंत्रण और पेआउट मिसमैच की पूरी विज़िबिलिटी एक ही डैशबोर्ड पर।</p>
             <div class="banner-tags">
                 <span>Smart Ledger</span>
                 <span>Daily Profit Pulse</span>
@@ -43,50 +43,50 @@
 
     <section class="card">
         <h2>संदर्भ</h2>
-        <form method="get" action="/ui/mr" class="form-grid">
-            <label>यूजर आयडी
+        <form method="get" action="/ui/hi" class="form-grid">
+            <label>यूज़र आईडी
                 <input type="number" name="userId" min="1" th:value="${userId}" required>
             </label>
-            <label>व्यवसाय
+            <label>बिज़नेस
                 <select name="businessId">
-                    <option value="">व्यवसाय निवडा</option>
+                    <option value="">बिज़नेस चुनें</option>
                     <option th:each="b : ${businesses}" th:value="${b.id}" th:text="${b.name}"
                             th:selected="${selectedBusinessId != null and selectedBusinessId == b.id}"></option>
                 </select>
             </label>
-            <label>सुरुवातीची तारीख
+            <label>शुरुआती तारीख
                 <input type="date" name="startDate" th:value="${startDate}">
             </label>
-            <label>अखेरीची तारीख
+            <label>अंतिम तारीख
                 <input type="date" name="endDate" th:value="${endDate}">
             </label>
-            <label>प्लॅटफॉर्म फिल्टर
+            <label>प्लेटफॉर्म फ़िल्टर
                 <select name="platformId">
-                    <option value="">सर्व प्लॅटफॉर्म</option>
+                    <option value="">सभी प्लेटफॉर्म</option>
                     <option th:each="p : ${platforms}" th:value="${p.id}" th:text="${p.name + ' (' + p.code + ')'}"
                             th:selected="${selectedPlatformId != null and selectedPlatformId == p.id}"></option>
                 </select>
             </label>
-            <label>खर्च श्रेणी फिल्टर
+            <label>खर्च श्रेणी फ़िल्टर
                 <input type="text" name="category" placeholder="Packaging" th:value="${category}">
             </label>
-            <button type="submit">फिल्टर लागू करा</button>
+            <button type="submit">फ़िल्टर लागू करें</button>
         </form>
     </section>
 
     <div class="columns">
         <section class="card">
-            <h2>नवीन व्यवसाय</h2>
+            <h2>नया बिज़नेस</h2>
             <form method="post" action="/ui/businesses" class="form-grid">
                 <input type="hidden" name="userId" th:value="${userId}">
-                <input type="hidden" name="lang" value="mr">
-                <label>नाव
+                <input type="hidden" name="lang" value="hi">
+                <label>नाम
                     <input type="text" name="name" maxlength="160" required>
                 </label>
                 <label>GSTIN
                     <input type="text" name="gstin" maxlength="15">
                 </label>
-                <label>पत्ता
+                <label>पता
                     <input type="text" name="address">
                 </label>
                 <label>शहर
@@ -95,71 +95,72 @@
                 <label>राज्य
                     <input type="text" name="state">
                 </label>
-                <button type="submit">व्यवसाय तयार करा</button>
+                <button type="submit">बिज़नेस बनाएं</button>
             </form>
         </section>
 
         <section class="card">
-            <h2>नवीन प्लॅटफॉर्म</h2>
+            <h2>नया प्लेटफॉर्म</h2>
             <form method="post" action="/ui/platforms" class="form-grid">
                 <input type="hidden" name="userId" th:value="${userId}">
-                <input type="hidden" name="lang" value="mr">
+                <input type="hidden" name="lang" value="hi">
                 <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
                 <input type="hidden" name="startDate" th:value="${startDate}">
                 <input type="hidden" name="endDate" th:value="${endDate}">
                 <label>कोड
                     <input type="text" name="code" maxlength="20" placeholder="ZOMATO" required>
                 </label>
-                <label>नाव
+                <label>नाम
                     <input type="text" name="name" maxlength="80" placeholder="Zomato" required>
                 </label>
-                <button type="submit" th:disabled="${selectedBusinessId == null}">प्लॅटफॉर्म तयार करा</button>
+                <button type="submit" th:disabled="${selectedBusinessId == null}">प्लेटफॉर्म बनाएं</button>
             </form>
         </section>
     </div>
 
     <div class="columns">
         <section class="card">
-            <h2>नवीन ऑर्डर</h2>
+            <h2>नया ऑर्डर</h2>
             <form method="post" action="/ui/orders" class="form-grid">
                 <input type="hidden" name="userId" th:value="${userId}">
-                <input type="hidden" name="lang" value="mr">
+                <input type="hidden" name="lang" value="hi">
                 <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
                 <input type="hidden" name="startDate" th:value="${startDate}">
                 <input type="hidden" name="endDate" th:value="${endDate}">
-                <label>प्लॅटफॉर्म
+
+                <label>प्लेटफॉर्म
                     <select name="platformId" required>
-                        <option value="">प्लॅटफॉर्म निवडा</option>
+                        <option value="">प्लेटफॉर्म चुनें</option>
                         <option th:each="p : ${platforms}" th:value="${p.id}" th:text="${p.name + ' (' + p.code + ')'}"></option>
                     </select>
                 </label>
                 <label>ऑर्डर तारीख
                     <input type="date" name="orderDate" required>
                 </label>
-                <label>ग्रॉस रक्कम
+                <label>ग्रॉस राशि
                     <input type="number" name="grossAmount" step="0.01" min="0" required>
                 </label>
-                <label>कमिशन %
+                <label>कमीशन %
                     <input type="number" name="commissionRate" step="0.01" min="0" required>
                 </label>
-                <label>कमिशनवरील GST %
+                <label>कमीशन पर GST %
                     <input type="number" name="gstRateOnComm" step="0.01" min="0" required>
                 </label>
-                <label>प्रत्यक्ष मिळालेले
+                <label>प्राप्त नेट राशि
                     <input type="number" name="netReceived" step="0.01" min="0" required>
                 </label>
-                <label>टीप
+                <label>टिप्पणी
                     <input type="text" name="notes">
                 </label>
-                <button type="submit" th:disabled="${selectedBusinessId == null}">ऑर्डर तयार करा</button>
+                <button type="submit" th:disabled="${selectedBusinessId == null}">ऑर्डर बनाएं</button>
             </form>
         </section>
 
         <section class="card">
-            <h2>नवीन खर्च</h2>
+            <h2>नया खर्च</h2>
             <form method="post" action="/ui/expenses" class="form-grid">
                 <input type="hidden" name="userId" th:value="${userId}">
-                <input type="hidden" name="lang" value="mr">
+                <input type="hidden" name="lang" value="hi">
                 <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
                 <input type="hidden" name="startDate" th:value="${startDate}">
                 <input type="hidden" name="endDate" th:value="${endDate}">
@@ -169,54 +170,54 @@
                 <label>श्रेणी
                     <input type="text" name="category" maxlength="80" required>
                 </label>
-                <label>रक्कम
+                <label>राशि
                     <input type="number" name="amount" step="0.01" min="0" required>
                 </label>
-                <label>टीप
+                <label>टिप्पणी
                     <input type="text" name="notes">
                 </label>
-                <button type="submit" th:disabled="${selectedBusinessId == null}">खर्च नोंदवा</button>
+                <button type="submit" th:disabled="${selectedBusinessId == null}">खर्च जोड़ें</button>
             </form>
         </section>
     </div>
 
     <section class="card">
-        <h2>डॅशबोर्ड</h2>
+        <h2>डैशबोर्ड</h2>
         <div class="kpis" th:if="${dashboard != null}">
-            <div><span>एकूण ग्रॉस</span><strong th:text="${dashboard.totalGross}"></strong></div>
-            <div><span>एकूण कमिशन</span><strong th:text="${dashboard.totalCommission}"></strong></div>
-            <div><span>कमिशनवरील GST</span><strong th:text="${dashboard.totalGstOnCommission}"></strong></div>
-            <div><span>एकूण अपेक्षित नेट</span><strong th:text="${dashboard.totalNetExpected}"></strong></div>
-            <div><span>एकूण प्रत्यक्ष नेट</span><strong th:text="${dashboard.totalNetReceived}"></strong></div>
-            <div><span>एकूण तफावत</span><strong th:text="${dashboard.totalMismatch}"></strong></div>
-            <div><span>एकूण खर्च</span><strong th:text="${dashboard.totalExpenses}"></strong></div>
-            <div><span>अंदाजे नफा</span><strong th:text="${dashboard.estimatedProfit}"></strong></div>
+            <div><span>कुल ग्रॉस</span><strong th:text="${dashboard.totalGross}"></strong></div>
+            <div><span>कुल कमीशन</span><strong th:text="${dashboard.totalCommission}"></strong></div>
+            <div><span>कमीशन पर कुल GST</span><strong th:text="${dashboard.totalGstOnCommission}"></strong></div>
+            <div><span>कुल अपेक्षित नेट</span><strong th:text="${dashboard.totalNetExpected}"></strong></div>
+            <div><span>कुल प्राप्त नेट</span><strong th:text="${dashboard.totalNetReceived}"></strong></div>
+            <div><span>कुल मिसमैच</span><strong th:text="${dashboard.totalMismatch}"></strong></div>
+            <div><span>कुल खर्च</span><strong th:text="${dashboard.totalExpenses}"></strong></div>
+            <div><span>अनुमानित लाभ</span><strong th:text="${dashboard.estimatedProfit}"></strong></div>
         </div>
-        <p th:if="${dashboard == null}">डॅशबोर्ड पाहण्यासाठी व्यवसाय निवडा.</p>
+        <p th:if="${dashboard == null}">डैशबोर्ड देखने के लिए बिज़नेस चुनें।</p>
     </section>
 
     <section class="card">
-        <h2>ऑर्डर्स</h2>
+        <h2>ऑर्डर</h2>
         <div class="table-wrap">
             <table>
                 <thead>
                 <tr>
-                    <th>आयडी</th>
+                    <th>आईडी</th>
                     <th>तारीख</th>
-                    <th>प्लॅटफॉर्म आयडी</th>
+                    <th>प्लेटफॉर्म आईडी</th>
                     <th>ग्रॉस</th>
-                    <th>कमिशन</th>
+                    <th>कमीशन</th>
                     <th>GST</th>
                     <th>अपेक्षित</th>
-                    <th>मिळालेले</th>
-                    <th>तफावत</th>
-                    <th>टीप</th>
-                    <th>चलन</th>
+                    <th>प्राप्त</th>
+                    <th>मिसमैच</th>
+                    <th>टिप्पणी</th>
+                    <th>इनवॉइस</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${orders == null or orders.isEmpty()}">
-                    <td colspan="11">निवडलेल्या फिल्टरसाठी ऑर्डर नाहीत.</td>
+                    <td colspan="11">चुने गए फ़िल्टर के लिए कोई ऑर्डर नहीं मिला।</td>
                 </tr>
                 <tr th:each="o : ${orders}">
                     <td th:text="${o.id}"></td>
@@ -230,7 +231,7 @@
                     <td th:text="${o.mismatchAmount}"></td>
                     <td th:text="${o.notes}"></td>
                     <td>
-                        <a th:href="@{/ui/orders/{orderId}/invoice(orderId=${o.id},userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},lang='mr')}">प्रिंट</a>
+                        <a th:href="@{/ui/orders/{orderId}/invoice(orderId=${o.id},userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},lang='hi')}">प्रिंट</a>
                     </td>
                 </tr>
                 </tbody>
@@ -244,16 +245,16 @@
             <table>
                 <thead>
                 <tr>
-                    <th>आयडी</th>
+                    <th>आईडी</th>
                     <th>तारीख</th>
                     <th>श्रेणी</th>
-                    <th>रक्कम</th>
-                    <th>टीप</th>
+                    <th>राशि</th>
+                    <th>टिप्पणी</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:if="${expenses == null or expenses.isEmpty()}">
-                    <td colspan="5">निवडलेल्या फिल्टरसाठी खर्च नाहीत.</td>
+                    <td colspan="5">चुने गए फ़िल्टर के लिए कोई खर्च नहीं मिला।</td>
                 </tr>
                 <tr th:each="e : ${expenses}">
                     <td th:text="${e.id}"></td>

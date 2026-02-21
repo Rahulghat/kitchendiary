@@ -91,6 +91,23 @@ public class UiController {
         "mr", userId, businessId, startDate, endDate, platformId, category, message, error, model);
   }
 
+  @GetMapping("/ui/hi")
+  public String uiHindi(
+      @RequestParam(defaultValue = "1") Long userId,
+      @RequestParam(required = false) Long businessId,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+          LocalDate startDate,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+          LocalDate endDate,
+      @RequestParam(required = false) Long platformId,
+      @RequestParam(required = false) String category,
+      @RequestParam(required = false) String message,
+      @RequestParam(required = false) String error,
+      Model model) {
+    return renderUi(
+        "hi", userId, businessId, startDate, endDate, platformId, category, message, error, model);
+  }
+
   private String renderUi(
       String lang,
       Long userId,
@@ -128,7 +145,7 @@ public class UiController {
       model.addAttribute("orders", List.of());
       model.addAttribute("expenses", List.of());
       model.addAttribute("dashboard", null);
-      return "mr".equals(lang) ? "ui/index-mr" : "ui/index";
+      return templateForLang(lang);
     }
 
     try {
@@ -156,7 +173,7 @@ public class UiController {
       model.addAttribute("dashboard", null);
     }
 
-    return "mr".equals(lang) ? "ui/index-mr" : "ui/index";
+    return templateForLang(lang);
   }
 
   @PostMapping("/ui/businesses")
@@ -294,7 +311,7 @@ public class UiController {
       String message,
       String error) {
     UriComponentsBuilder b =
-        UriComponentsBuilder.fromPath("mr".equals(lang) ? "/ui/mr" : "/ui")
+        UriComponentsBuilder.fromPath(pathForLang(lang))
             .queryParam("userId", userId);
     if (businessId != null) {
       b.queryParam("businessId", businessId);
@@ -341,5 +358,25 @@ public class UiController {
       b.queryParam("endDate", endDate);
     }
     return "redirect:" + b.buildAndExpand(orderId).toUriString();
+  }
+
+  private String templateForLang(String lang) {
+    if ("mr".equals(lang)) {
+      return "ui/index-mr";
+    }
+    if ("hi".equals(lang)) {
+      return "ui/index-hi";
+    }
+    return "ui/index";
+  }
+
+  private String pathForLang(String lang) {
+    if ("mr".equals(lang)) {
+      return "/ui/mr";
+    }
+    if ("hi".equals(lang)) {
+      return "/ui/hi";
+    }
+    return "/ui";
   }
 }

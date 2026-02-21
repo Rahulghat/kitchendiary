@@ -1,14 +1,17 @@
 :root {
-    --bg-top: #fef7ea;
-    --bg-bottom: #e8f6f1;
-    --ink: #12263a;
-    --muted: #5b6b7a;
-    --card: #ffffff;
-    --line: #dce5ee;
-    --primary: #006d5b;
-    --primary-strong: #004f42;
+    --bg-top: #fff8ef;
+    --bg-bottom: #e7f4f2;
+    --ink: #11273a;
+    --muted: #55697b;
+    --card: #ffffffcc;
+    --line: #d5e1eb;
+    --primary: #0f7a63;
+    --primary-strong: #0a5c4a;
+    --accent: #d67a24;
     --error: #8b1e3f;
     --ok: #116149;
+    --radius: 16px;
+    --shadow: 0 14px 36px rgba(17, 39, 58, 0.12);
 }
 
 * {
@@ -17,10 +20,37 @@
 
 body {
     margin: 0;
-    font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
     color: var(--ink);
     background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
     min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(18px);
+}
+
+body::before {
+    width: 360px;
+    height: 360px;
+    right: -120px;
+    top: -80px;
+    background: radial-gradient(circle, #ffd8b0 0%, #ffd8b000 70%);
+}
+
+body::after {
+    width: 300px;
+    height: 300px;
+    left: -120px;
+    bottom: -120px;
+    background: radial-gradient(circle, #bdebe0 0%, #bdebe000 72%);
 }
 
 .page {
@@ -31,6 +61,12 @@ body {
 
 .hero {
     margin-bottom: 18px;
+    padding: 20px;
+    border: 1px solid #ffffffaa;
+    background: linear-gradient(110deg, #ffffffde, #f5fbffca);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    animation: reveal 0.45s ease-out both;
 }
 
 .brand {
@@ -46,52 +82,169 @@ body {
 .hero h1 {
     margin: 0 0 6px;
     font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+    letter-spacing: 0.2px;
 }
 
 .hero p {
-    margin: 0;
+    margin: 0 0 4px;
     color: var(--muted);
 }
 
 .hero a {
-    color: var(--primary-strong);
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.hero a:hover {
+    border-color: var(--accent);
+}
+
+.fancy-banner {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 20px;
+    margin: 12px 0 14px;
+    border-radius: var(--radius);
+    background: linear-gradient(120deg, #0c6654, #138a6f 58%, #18a47f);
+    color: #f4fffb;
+    box-shadow: var(--shadow);
+    animation: reveal 0.6s ease-out both;
+}
+
+.fancy-banner::before {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    right: -80px;
+    top: -90px;
+    background: radial-gradient(circle, #ffffff3d, #ffffff00 68%);
+}
+
+.fancy-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #ffffff12, #ffffff00 35%, #ffd8a81f 70%, #ffffff0f);
+    background-size: 180% 180%;
+    animation: shimmer 5.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.banner-copy {
+    position: relative;
+    z-index: 1;
+}
+
+.banner-copy h2 {
+    margin: 4px 0 6px;
+    font-size: clamp(1.25rem, 2.9vw, 1.8rem);
+    line-height: 1.2;
+}
+
+.banner-copy p {
+    margin: 0;
+    color: #e6fff6;
+}
+
+.eyebrow {
+    margin: 0;
+    display: inline-block;
+    border: 1px solid #ffffff4d;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.banner-tags {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.banner-tags span {
+    background: #ffffff24;
+    border: 1px solid #ffffff45;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 0.78rem;
     font-weight: 700;
 }
 
+.banner-badge {
+    position: relative;
+    z-index: 1;
+    min-width: 132px;
+    text-align: center;
+    padding: 14px 10px;
+    border-radius: 14px;
+    border: 1px solid #ffffff5e;
+    background: linear-gradient(180deg, #ffffff2a, #ffffff12);
+}
+
+.banner-badge strong {
+    display: block;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.banner-badge small {
+    display: block;
+    margin-top: 6px;
+    color: #e9fff8;
+}
+
 .alert {
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 10px 12px;
     margin-bottom: 12px;
     font-weight: 600;
+    border: 1px solid transparent;
 }
 
 .alert.ok {
     background: #e7f8f0;
     color: var(--ok);
+    border-color: #c8eadb;
 }
 
 .alert.err {
     background: #fbe9ef;
     color: var(--error);
+    border-color: #efc7d5;
 }
 
 .card {
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 16px;
+    backdrop-filter: blur(6px);
+    border-radius: var(--radius);
+    padding: 18px;
     margin-bottom: 14px;
-    box-shadow: 0 8px 26px rgba(18, 38, 58, 0.06);
+    box-shadow: var(--shadow);
+    animation: reveal 0.5s ease-out both;
 }
 
 .card h2 {
-    margin: 0 0 12px;
-    font-size: 1.05rem;
+    margin: 0 0 14px;
+    font-size: 1.06rem;
+    color: #17344d;
 }
 
 .form-grid {
     display: grid;
-    gap: 10px;
+    gap: 12px;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
 }
 
@@ -108,26 +261,34 @@ input, select, button {
 
 input, select {
     width: 100%;
-    border: 1px solid #c4d1df;
+    border: 1px solid #c3d4e2;
     border-radius: 10px;
-    padding: 8px 10px;
+    padding: 9px 11px;
     color: var(--ink);
-    background: #fff;
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #8abfad;
+    box-shadow: 0 0 0 3px rgba(15, 122, 99, 0.14);
 }
 
 button {
     border: none;
     border-radius: 10px;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), #16a17f);
     color: #fff;
     padding: 10px 12px;
     font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: filter 0.2s ease, transform 0.2s ease;
 }
 
 button:hover {
-    background: var(--primary-strong);
+    filter: brightness(0.95);
     transform: translateY(-1px);
 }
 
@@ -141,6 +302,7 @@ button:disabled {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
+    align-items: start;
 }
 
 .kpis {
@@ -151,9 +313,9 @@ button:disabled {
 
 .kpis div {
     border: 1px solid var(--line);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 10px;
-    background: #f8fbfd;
+    background: linear-gradient(150deg, #f7fcff, #eef7f4);
 }
 
 .kpis span {
@@ -175,6 +337,8 @@ table {
     width: 100%;
     border-collapse: collapse;
     min-width: 760px;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 th, td {
@@ -188,17 +352,39 @@ th, td {
 th {
     color: var(--muted);
     font-weight: 700;
-    background: #f6fafc;
+    background: #edf4f8;
+}
+
+tbody tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+tbody tr:nth-child(even) {
+    background: #fbfdff;
+}
+
+td a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
 }
 
 @media (max-width: 900px) {
     .columns {
         grid-template-columns: 1fr;
     }
+
+    .fancy-banner {
+        grid-template-columns: 1fr;
+    }
+
+    .banner-badge {
+        width: fit-content;
+    }
 }
 
 .invoice-body {
-    background: #f4f6f8;
+    background: linear-gradient(150deg, #f5f7fa, #edf5f3);
 }
 
 .invoice-page {
@@ -211,6 +397,10 @@ th {
     gap: 14px;
     align-items: center;
     margin-bottom: 14px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    background: #ffffffdb;
+    box-shadow: var(--shadow);
 }
 
 .invoice-head img {
@@ -259,6 +449,29 @@ th {
     text-decoration: none;
     padding: 10px 12px;
     font-weight: 700;
+}
+
+@keyframes reveal {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 @media print {
