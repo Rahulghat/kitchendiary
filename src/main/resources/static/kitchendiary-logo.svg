@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="80" viewBox="0 0 320 80" role="img" aria-labelledby="title desc">
+  <title id="title">KitchenDiary Logo</title>
+  <desc id="desc">A pot icon with steam and the KitchenDiary wordmark.</desc>
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006d5b"/>
+      <stop offset="100%" stop-color="#00a176"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="320" height="80" fill="none"/>
+  <g transform="translate(8,8)">
+    <circle cx="32" cy="32" r="30" fill="#e7f8f0"/>
+    <rect x="16" y="30" width="32" height="14" rx="4" fill="url(#g)"/>
+    <rect x="13" y="27" width="38" height="5" rx="2.5" fill="#004f42"/>
+    <path d="M20 22c3-3 1-6-1-8" stroke="#006d5b" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M30 21c3-3 1-7-1-10" stroke="#00a176" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M40 22c3-3 1-6-1-8" stroke="#006d5b" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(76,18)" fill="#12263a">
+    <text x="0" y="22" font-family="Segoe UI, Trebuchet MS, sans-serif" font-size="24" font-weight="700">KitchenDiary</text>
+    <text x="0" y="44" font-family="Segoe UI, Trebuchet MS, sans-serif" font-size="12" fill="#5b6b7a">Food business journal</text>
+  </g>
+</svg>

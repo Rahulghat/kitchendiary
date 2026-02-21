@@ -3,10 +3,16 @@ package com.kitchen.kitchendiary.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record OrderResponse(
-    Long id,
+public record OrderInvoiceResponse(
+    Long orderId,
     Long businessId,
-    Long platformId,
+    String businessName,
+    String businessAddress,
+    String businessCity,
+    String businessState,
+    String businessGstin,
+    String platformName,
+    String platformCode,
     LocalDate orderDate,
     BigDecimal grossAmount,
     BigDecimal commissionRate,

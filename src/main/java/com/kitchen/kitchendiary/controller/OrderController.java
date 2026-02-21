@@ -2,78 +2,44 @@ package com.kitchen.kitchendiary.controller;
 
 import com.kitchen.kitchendiary.dto.CreateOrderRequest;
 import com.kitchen.kitchendiary.dto.OrderResponse;
-import com.kitchen.kitchendiary.entities.Order;
-import com.kitchen.kitchendiary.repositories.OrderRepository;
-import com.kitchen.kitchendiary.service.BusinessAccessService;
+import com.kitchen.kitchendiary.service.OrderQueryService;
 import com.kitchen.kitchendiary.service.OrderService;
 import jakarta.validation.Valid;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/businesses/{businessId}/orders")
 public class OrderController {
 
-    private final BusinessAccessService businessAccessService;
-    private final OrderRepository orderRepository;
-    private final OrderService orderService;
+  private final OrderService orderService;
+  private final OrderQueryService orderQueryService;
 
-    public OrderController(BusinessAccessService businessAccessService,
-                           OrderRepository orderRepository,
-                           OrderService orderService) {
-        this.businessAccessService = businessAccessService;
-        this.orderRepository = orderRepository;
-        this.orderService = orderService;
-    }
+  public OrderController(OrderService orderService, OrderQueryService orderQueryService) {
+    this.orderService = orderService;
+    this.orderQueryService = orderQueryService;
+  }
 
-    @PostMapping("/api/businesses/{businessId}/orders")
-    public OrderResponse createOrder(@RequestParam Long ownerUserId,
-                                     @PathVariable Long businessId,
-                                     @RequestParam Long platformId,
-                                     @Valid @RequestBody CreateOrderRequest request) {
-        return orderService.create(ownerUserId, businessId, platformId, request);
-    }
+  @PostMapping("/platform/{platformId}")
+  public OrderResponse createOrder(
+      @RequestHeader(value = "X-USER-ID", required = false) String userHeader,
+      @PathVariable Long businessId,
+      @PathVariable Long platformId,
+      @Valid @RequestBody CreateOrderRequest req) {
+    Long ownerUserId = RequestUser.requireUserId(userHeader);
+    return orderService.create(ownerUserId, businessId, platformId, req);
+  }
 
-    @GetMapping("/api/businesses/{businessId}/orders")
-    @Transactional(readOnly = true)
-    public List<OrderResponse> listOrders(@RequestParam Long ownerUserId,
-                                          @PathVariable Long businessId,
-                                          @RequestParam LocalDate startDate,
-                                          @RequestParam LocalDate endDate,
-                                          @RequestParam(required = false) Long platformId) {
-        businessAccessService.getBusinessOrThrow(ownerUserId, businessId);
-
-        List<Order> orders = platformId == null
-                ? orderRepository.findAllByBusinessIdAndOrderDateBetween(businessId, startDate, endDate)
-                : orderRepository.findAllByBusinessIdAndPlatformIdAndOrderDateBetween(
-                businessId, platformId, startDate, endDate
-        );
-
-        return orders.stream().map(this::toResponse).toList();
-    }
-
-    private OrderResponse toResponse(Order order) {
-        return new OrderResponse(
-                order.getId(),
-                order.getBusiness().getId(),
-                order.getPlatform().getId(),
-                order.getOrderDate(),
-                order.getGrossAmount(),
-                order.getCommissionRate(),
-                order.getGstRateOnComm(),
-                order.getCommissionAmount(),
-                order.getGstOnCommission(),
-                order.getNetExpected(),
-                order.getNetReceived(),
-                order.getMismatchAmount(),
-                order.getNotes()
-        );
-    }
+  @GetMapping
+  public List<OrderResponse> listOrders(
+      @RequestHeader(value = "X-USER-ID", required = false) String userHeader,
+      @PathVariable Long businessId,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+      @RequestParam(required = false) Long platformId) {
+    Long ownerUserId = RequestUser.requireUserId(userHeader);
+    return orderQueryService.list(ownerUserId, businessId, startDate, endDate, platformId);
+  }
 }

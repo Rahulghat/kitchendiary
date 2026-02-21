@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${'Invoice #' + invoice.orderId}">Order Invoice</title>
+    <link rel="stylesheet" href="/ui.css">
+</head>
+<body class="invoice-body">
+<div class="invoice-page">
+    <header class="invoice-head">
+        <img src="/kitchendiary-logo.svg" alt="KitchenDiary logo">
+        <div>
+            <h1>Order Invoice</h1>
+            <p th:text="${'Invoice #: ' + invoice.orderId}"></p>
+            <p th:text="${'Order Date: ' + invoice.orderDate}"></p>
+        </div>
+    </header>
+
+    <section class="card">
+        <h2>Business</h2>
+        <p><strong th:text="${invoice.businessName}"></strong></p>
+        <p th:text="${invoice.businessAddress}"></p>
+        <p th:text="${invoice.businessCity + ', ' + invoice.businessState}"></p>
+        <p th:if="${invoice.businessGstin != null and !invoice.businessGstin.isBlank()}" th:text="${'GSTIN: ' + invoice.businessGstin}"></p>
+        <p th:text="${'Platform: ' + invoice.platformName + ' (' + invoice.platformCode + ')'}"></p>
+    </section>
+
+    <section class="card">
+        <h2>Order Summary</h2>
+        <table class="invoice-table">
+            <tbody>
+            <tr><th>Gross Amount</th><td th:text="${invoice.grossAmount}"></td></tr>
+            <tr><th>Commission Rate</th><td th:text="${invoice.commissionRate + '%'}"></td></tr>
+            <tr><th>GST on Commission</th><td th:text="${invoice.gstRateOnComm + '%'}"></td></tr>
+            <tr><th>Commission Amount</th><td th:text="${invoice.commissionAmount}"></td></tr>
+            <tr><th>GST Amount</th><td th:text="${invoice.gstOnCommission}"></td></tr>
+            <tr><th>Net Expected</th><td th:text="${invoice.netExpected}"></td></tr>
+            <tr><th>Net Received</th><td th:text="${invoice.netReceived}"></td></tr>
+            <tr><th>Mismatch</th><td th:text="${invoice.mismatchAmount}"></td></tr>
+            <tr><th>Notes</th><td th:text="${invoice.notes == null || invoice.notes.isBlank() ? '-' : invoice.notes}"></td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="invoice-actions no-print">
+        <a class="button-link"
+           th:if="${lang == 'mr'}"
+           th:href="@{/ui/mr(userId=${userId},businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
+            परत जा
+        </a>
+        <a class="button-link"
+           th:if="${lang != 'mr'}"
+           th:href="@{/ui(userId=${userId},businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
+            Back to Console
+        </a>
+        <button onclick="window.print()">Print Invoice</button>
+    </div>
+</div>
+
+<script th:if="${autoPrint}">
+    window.addEventListener('load', function () {
+        window.print();
+    });
+</script>
+</body>
+</html>

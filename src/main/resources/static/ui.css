@@ -1,0 +1,277 @@
+:root {
+    --bg-top: #fef7ea;
+    --bg-bottom: #e8f6f1;
+    --ink: #12263a;
+    --muted: #5b6b7a;
+    --card: #ffffff;
+    --line: #dce5ee;
+    --primary: #006d5b;
+    --primary-strong: #004f42;
+    --error: #8b1e3f;
+    --ok: #116149;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+    color: var(--ink);
+    background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
+    min-height: 100vh;
+}
+
+.page {
+    width: min(1200px, 94vw);
+    margin: 0 auto;
+    padding: 24px 0 60px;
+}
+
+.hero {
+    margin-bottom: 18px;
+}
+
+.brand {
+    margin-bottom: 8px;
+}
+
+.brand img {
+    width: min(320px, 68vw);
+    height: auto;
+    display: block;
+}
+
+.hero h1 {
+    margin: 0 0 6px;
+    font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+}
+
+.hero p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.hero a {
+    color: var(--primary-strong);
+    font-weight: 700;
+}
+
+.alert {
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.alert.ok {
+    background: #e7f8f0;
+    color: var(--ok);
+}
+
+.alert.err {
+    background: #fbe9ef;
+    color: var(--error);
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 8px 26px rgba(18, 38, 58, 0.06);
+}
+
+.card h2 {
+    margin: 0 0 12px;
+    font-size: 1.05rem;
+}
+
+.form-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+label {
+    display: grid;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+input, select, button {
+    font: inherit;
+}
+
+input, select {
+    width: 100%;
+    border: 1px solid #c4d1df;
+    border-radius: 10px;
+    padding: 8px 10px;
+    color: var(--ink);
+    background: #fff;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: var(--primary-strong);
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+}
+
+.kpis div {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    background: #f8fbfd;
+}
+
+.kpis span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 4px;
+}
+
+.kpis strong {
+    font-size: 1.08rem;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+}
+
+th, td {
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    padding: 9px 8px;
+    vertical-align: top;
+    font-size: 0.92rem;
+}
+
+th {
+    color: var(--muted);
+    font-weight: 700;
+    background: #f6fafc;
+}
+
+@media (max-width: 900px) {
+    .columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+.invoice-body {
+    background: #f4f6f8;
+}
+
+.invoice-page {
+    width: min(820px, 92vw);
+    margin: 18px auto 30px;
+}
+
+.invoice-head {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.invoice-head img {
+    width: 180px;
+    height: auto;
+}
+
+.invoice-head h1 {
+    margin: 0 0 4px;
+}
+
+.invoice-head p {
+    margin: 2px 0;
+    color: var(--muted);
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.invoice-table th,
+.invoice-table td {
+    border-bottom: 1px solid var(--line);
+    padding: 10px 8px;
+    text-align: left;
+}
+
+.invoice-table th {
+    width: 40%;
+    color: var(--muted);
+}
+
+.invoice-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.button-link {
+    display: inline-block;
+    border-radius: 10px;
+    background: #e5ecef;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 10px 12px;
+    font-weight: 700;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .invoice-body {
+        background: #fff;
+    }
+
+    .invoice-page {
+        width: 100%;
+        margin: 0;
+    }
+}
