@@ -70,6 +70,15 @@
             <label>Expense Category Filter
                 <input type="text" name="category" placeholder="Packaging" th:value="${category}">
             </label>
+            <label>Rows Per Table
+                <select name="pageSize">
+                    <option value="10" th:selected="${pageSize == 10}">10</option>
+                    <option value="20" th:selected="${pageSize == 20}">20</option>
+                    <option value="50" th:selected="${pageSize == 50}">50</option>
+                </select>
+            </label>
+            <input type="hidden" name="ordersPage" value="0">
+            <input type="hidden" name="expensesPage" value="0">
             <button type="submit">Apply Filters</button>
         </form>
     </section>
@@ -197,7 +206,17 @@
     </section>
 
     <section class="card">
-        <h2>Orders</h2>
+        <div class="section-head">
+            <h2>Orders</h2>
+            <form method="get" action="/ui/export/orders">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
+                <input type="hidden" name="startDate" th:value="${startDate}">
+                <input type="hidden" name="endDate" th:value="${endDate}">
+                <input type="hidden" name="platformId" th:value="${selectedPlatformId}">
+                <button type="submit" th:disabled="${selectedBusinessId == null}">Export Excel</button>
+            </form>
+        </div>
         <div class="table-wrap">
             <table>
                 <thead>
@@ -237,10 +256,31 @@
                 </tbody>
             </table>
         </div>
+        <div class="pager" th:if="${selectedBusinessId != null}">
+            <a th:if="${ordersHasPrev}"
+               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersPage=${ordersPage - 1},expensesPage=${expensesPage},pageSize=${pageSize})}">
+                Previous
+            </a>
+            <span th:text="${(ordersTotalPages == 0 ? 0 : ordersPage + 1) + ' / ' + ordersTotalPages}"></span>
+            <a th:if="${ordersHasNext}"
+               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersPage=${ordersPage + 1},expensesPage=${expensesPage},pageSize=${pageSize})}">
+                Next
+            </a>
+        </div>
     </section>
 
     <section class="card">
-        <h2>Expenses</h2>
+        <div class="section-head">
+            <h2>Expenses</h2>
+            <form method="get" action="/ui/export/expenses">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
+                <input type="hidden" name="startDate" th:value="${startDate}">
+                <input type="hidden" name="endDate" th:value="${endDate}">
+                <input type="hidden" name="category" th:value="${category}">
+                <button type="submit" th:disabled="${selectedBusinessId == null}">Export Excel</button>
+            </form>
+        </div>
         <div class="table-wrap">
             <table>
                 <thead>
@@ -265,6 +305,17 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="pager" th:if="${selectedBusinessId != null}">
+            <a th:if="${expensesHasPrev}"
+               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersPage=${ordersPage},expensesPage=${expensesPage - 1},pageSize=${pageSize})}">
+                Previous
+            </a>
+            <span th:text="${(expensesTotalPages == 0 ? 0 : expensesPage + 1) + ' / ' + expensesTotalPages}"></span>
+            <a th:if="${expensesHasNext}"
+               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersPage=${ordersPage},expensesPage=${expensesPage + 1},pageSize=${pageSize})}">
+                Next
+            </a>
         </div>
     </section>
 </div>

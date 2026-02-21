@@ -1,9 +1,12 @@
 package com.kitchen.kitchendiary.service;
 
 import com.kitchen.kitchendiary.dto.ExpenseResponse;
+import com.kitchen.kitchendiary.entities.Expense;
 import com.kitchen.kitchendiary.repositories.ExpenseRepository;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,15 +36,40 @@ public class ExpenseQueryService {
                 businessId, category.trim(), startDate, endDate);
 
     return expenses.stream()
-        .map(
-            e ->
-                new ExpenseResponse(
-                    e.getId(),
-                    e.getBusiness().getId(),
-                    e.getExpenseDate(),
-                    e.getCategory(),
-                    e.getAmount(),
-                    e.getNotes()))
+        .map(this::toExpenseResponse)
         .toList();
+  }
+
+  @Transactional(readOnly = true)
+  public Page<ExpenseResponse> listPaged(
+      Long ownerUserId,
+      Long businessId,
+      LocalDate startDate,
+      LocalDate endDate,
+      String category,
+      int page,
+      int size) {
+
+    businessAccessService.getBusinessOrThrow(ownerUserId, businessId);
+    var pageable = PageRequest.of(Math.max(0, page), Math.max(1, size));
+
+    var expensesPage =
+        (category == null || category.isBlank())
+            ? expenseRepository.findAllByBusinessIdAndExpenseDateBetween(
+                businessId, startDate, endDate, pageable)
+            : expenseRepository.findAllByBusinessIdAndCategoryIgnoreCaseAndExpenseDateBetween(
+                businessId, category.trim(), startDate, endDate, pageable);
+
+    return expensesPage.map(this::toExpenseResponse);
+  }
+
+  private ExpenseResponse toExpenseResponse(Expense expense) {
+    return new ExpenseResponse(
+        expense.getId(),
+        expense.getBusiness().getId(),
+        expense.getExpenseDate(),
+        expense.getCategory(),
+        expense.getAmount(),
+        expense.getNotes());
   }
 }

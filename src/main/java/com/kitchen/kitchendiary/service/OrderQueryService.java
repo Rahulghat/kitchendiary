@@ -2,9 +2,12 @@ package com.kitchen.kitchendiary.service;
 
 import com.kitchen.kitchendiary.dto.OrderInvoiceResponse;
 import com.kitchen.kitchendiary.dto.OrderResponse;
+import com.kitchen.kitchendiary.entities.Order;
 import com.kitchen.kitchendiary.repositories.OrderRepository;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,23 +36,31 @@ public class OrderQueryService {
                 businessId, platformId, startDate, endDate);
 
     return orders.stream()
-        .map(
-            o ->
-                new OrderResponse(
-                    o.getId(),
-                    o.getBusiness().getId(),
-                    o.getPlatform().getId(),
-                    o.getOrderDate(),
-                    o.getGrossAmount(),
-                    o.getCommissionRate(),
-                    o.getGstRateOnComm(),
-                    o.getCommissionAmount(),
-                    o.getGstOnCommission(),
-                    o.getNetExpected(),
-                    o.getNetReceived(),
-                    o.getMismatchAmount(),
-                    o.getNotes()))
+        .map(this::toOrderResponse)
         .toList();
+  }
+
+  @Transactional(readOnly = true)
+  public Page<OrderResponse> listPaged(
+      Long ownerUserId,
+      Long businessId,
+      LocalDate startDate,
+      LocalDate endDate,
+      Long platformId,
+      int page,
+      int size) {
+
+    businessAccessService.getBusinessOrThrow(ownerUserId, businessId);
+    var pageable = PageRequest.of(Math.max(0, page), Math.max(1, size));
+
+    var ordersPage =
+        (platformId == null)
+            ? orderRepository.findAllByBusinessIdAndOrderDateBetween(
+                businessId, startDate, endDate, pageable)
+            : orderRepository.findAllByBusinessIdAndPlatformIdAndOrderDateBetween(
+                businessId, platformId, startDate, endDate, pageable);
+
+    return ordersPage.map(this::toOrderResponse);
   }
 
   @Transactional(readOnly = true)
@@ -74,6 +85,23 @@ public class OrderQueryService {
         business.getGstin(),
         platform.getName(),
         platform.getCode(),
+        order.getOrderDate(),
+        order.getGrossAmount(),
+        order.getCommissionRate(),
+        order.getGstRateOnComm(),
+        order.getCommissionAmount(),
+        order.getGstOnCommission(),
+        order.getNetExpected(),
+        order.getNetReceived(),
+        order.getMismatchAmount(),
+        order.getNotes());
+  }
+
+  private OrderResponse toOrderResponse(Order order) {
+    return new OrderResponse(
+        order.getId(),
+        order.getBusiness().getId(),
+        order.getPlatform().getId(),
         order.getOrderDate(),
         order.getGrossAmount(),
         order.getCommissionRate(),

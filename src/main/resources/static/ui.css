@@ -1,15 +1,15 @@
 :root {
     --bg-top: #fff8ef;
-    --bg-bottom: #e7f4f2;
+    --bg-bottom: #fff1df;
     --ink: #11273a;
     --muted: #55697b;
     --card: #ffffffcc;
     --line: #d5e1eb;
-    --primary: #0f7a63;
-    --primary-strong: #0a5c4a;
-    --accent: #d67a24;
+    --primary: #d97706;
+    --primary-strong: #b45309;
+    --accent: #f59e0b;
     --error: #8b1e3f;
-    --ok: #116149;
+    --ok: #9a3412;
     --radius: 16px;
     --shadow: 0 14px 36px rgba(17, 39, 58, 0.12);
 }
@@ -50,7 +50,7 @@ body::after {
     height: 300px;
     left: -120px;
     bottom: -120px;
-    background: radial-gradient(circle, #bdebe0 0%, #bdebe000 72%);
+    background: radial-gradient(circle, #ffd9ad 0%, #ffd9ad00 72%);
 }
 
 .page {
@@ -112,8 +112,8 @@ body::after {
     padding: 20px;
     margin: 12px 0 14px;
     border-radius: var(--radius);
-    background: linear-gradient(120deg, #0c6654, #138a6f 58%, #18a47f);
-    color: #f4fffb;
+    background: linear-gradient(120deg, #b45309, #d97706 58%, #f59e0b);
+    color: #fff8ef;
     box-shadow: var(--shadow);
     animation: reveal 0.6s ease-out both;
 }
@@ -151,7 +151,7 @@ body::after {
 
 .banner-copy p {
     margin: 0;
-    color: #e6fff6;
+    color: #fff1de;
 }
 
 .eyebrow {
@@ -202,7 +202,7 @@ body::after {
 .banner-badge small {
     display: block;
     margin-top: 6px;
-    color: #e9fff8;
+    color: #fff4e5;
 }
 
 .alert {
@@ -214,9 +214,9 @@ body::after {
 }
 
 .alert.ok {
-    background: #e7f8f0;
+    background: #fff2e8;
     color: var(--ok);
-    border-color: #c8eadb;
+    border-color: #fed7aa;
 }
 
 .alert.err {
@@ -240,6 +240,46 @@ body::after {
     margin: 0 0 14px;
     font-size: 1.06rem;
     color: #17344d;
+}
+
+.section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.section-head h2 {
+    margin: 0;
+}
+
+.pager {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.pager a,
+.pager span {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.pager a {
+    color: var(--primary-strong);
+    background: #fff9ef;
+    font-weight: 700;
+}
+
+.pager span {
+    color: var(--muted);
+    background: #fff;
 }
 
 .form-grid {
@@ -272,14 +312,14 @@ input, select {
 input:focus,
 select:focus {
     outline: none;
-    border-color: #8abfad;
-    box-shadow: 0 0 0 3px rgba(15, 122, 99, 0.14);
+    border-color: #f4b977;
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18);
 }
 
 button {
     border: none;
     border-radius: 10px;
-    background: linear-gradient(135deg, var(--primary), #16a17f);
+    background: linear-gradient(135deg, var(--primary), #f59e0b);
     color: #fff;
     padding: 10px 12px;
     font-weight: 700;
@@ -315,7 +355,7 @@ button:disabled {
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 10px;
-    background: linear-gradient(150deg, #f7fcff, #eef7f4);
+    background: linear-gradient(150deg, #fffaf3, #fff2e4);
 }
 
 .kpis span {
@@ -384,7 +424,7 @@ td a {
 }
 
 .invoice-body {
-    background: linear-gradient(150deg, #f5f7fa, #edf5f3);
+    background: linear-gradient(150deg, #fff8ef, #fff1df);
 }
 
 .invoice-page {
