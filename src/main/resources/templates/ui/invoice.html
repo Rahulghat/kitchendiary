@@ -46,19 +46,22 @@
     <div class="invoice-actions no-print">
         <a class="button-link"
            th:if="${lang == 'mr'}"
-           th:href="@{/ui/mr(userId=${userId},businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
+           th:href="@{/ui/mr(businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
             परत जा
         </a>
         <a class="button-link"
            th:if="${lang == 'hi'}"
-           th:href="@{/ui/hi(userId=${userId},businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
+           th:href="@{/ui/hi(businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
             वापस जाएं
         </a>
         <a class="button-link"
            th:if="${lang != 'mr' and lang != 'hi'}"
-           th:href="@{/ui(userId=${userId},businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
+           th:href="@{/ui(businessId=${businessId},startDate=${startDate},endDate=${endDate})}">
             Back to Console
         </a>
+        <form method="post" action="/logout">
+            <button type="submit">Logout</button>
+        </form>
         <button onclick="window.print()">Print Invoice</button>
     </div>
 </div>

@@ -1,5 +1,6 @@
 package com.kitchen.kitchendiary.controller;
 
+import com.kitchen.kitchendiary.config.CurrentUser;
 import com.kitchen.kitchendiary.dto.CreateBusinessRequest;
 import com.kitchen.kitchendiary.dto.CreateExpenseRequest;
 import com.kitchen.kitchendiary.dto.CreateOrderRequest;
@@ -86,7 +87,6 @@ public class UiController {
 
   @GetMapping("/ui")
   public String ui(
-      @RequestParam(defaultValue = "1") Long userId,
       @RequestParam(required = false) Long businessId,
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate startDate,
@@ -105,7 +105,6 @@ public class UiController {
       @RequestParam(required = false) String error,
       Model model) {
     return renderUi("en",
-        userId,
         businessId,
         startDate,
         endDate,
@@ -125,7 +124,6 @@ public class UiController {
 
   @GetMapping("/ui/mr")
   public String uiMarathi(
-      @RequestParam(defaultValue = "1") Long userId,
       @RequestParam(required = false) Long businessId,
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate startDate,
@@ -144,7 +142,6 @@ public class UiController {
       @RequestParam(required = false) String error,
       Model model) {
     return renderUi("mr",
-        userId,
         businessId,
         startDate,
         endDate,
@@ -164,7 +161,6 @@ public class UiController {
 
   @GetMapping("/ui/hi")
   public String uiHindi(
-      @RequestParam(defaultValue = "1") Long userId,
       @RequestParam(required = false) Long businessId,
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate startDate,
@@ -183,7 +179,6 @@ public class UiController {
       @RequestParam(required = false) String error,
       Model model) {
     return renderUi("hi",
-        userId,
         businessId,
         startDate,
         endDate,
@@ -203,7 +198,6 @@ public class UiController {
 
   private String renderUi(
       String lang,
-      Long userId,
       Long businessId,
       LocalDate startDate,
       LocalDate endDate,
@@ -219,6 +213,8 @@ public class UiController {
       String message,
       String error,
       Model model) {
+    Long currentUserId = CurrentUser.id();
+    boolean isAdmin = CurrentUser.isAdmin();
     LocalDate effectiveStart = startDate == null ? YearMonth.now().atDay(1) : startDate;
     LocalDate effectiveEnd = endDate == null ? LocalDate.now() : endDate;
     int effectivePageSize = Math.min(Math.max(pageSize, MIN_PAGE_SIZE), MAX_PAGE_SIZE);
@@ -228,7 +224,7 @@ public class UiController {
     setupBaseModel(
         model,
         lang,
-        userId,
+        isAdmin,
         effectiveStart,
         effectiveEnd,
         platformId,
@@ -243,7 +239,7 @@ public class UiController {
         message,
         error);
 
-    List<com.kitchen.kitchendiary.entities.Business> businesses = businessService.list(userId);
+    List<com.kitchen.kitchendiary.entities.Business> businesses = businessService.list(currentUserId);
     model.addAttribute("businesses", businesses);
 
     Long effectiveBusinessId = businessId;
@@ -260,7 +256,7 @@ public class UiController {
     try {
       applyBusinessData(
           model,
-          userId,
+          currentUserId,
           effectiveBusinessId,
           effectiveStart,
           effectiveEnd,
@@ -283,7 +279,7 @@ public class UiController {
 
   private void applyBusinessData(
       Model model,
-      Long userId,
+      Long currentUserId,
       Long effectiveBusinessId,
       LocalDate effectiveStart,
       LocalDate effectiveEnd,
@@ -296,11 +292,11 @@ public class UiController {
       int safeOrdersPage,
       int safeExpensesPage,
       int effectivePageSize) {
-    var selectedBusiness = businessService.get(userId, effectiveBusinessId);
-    var platforms = platformService.list(userId, effectiveBusinessId);
+    var selectedBusiness = businessService.get(currentUserId, effectiveBusinessId);
+    var platforms = platformService.list(currentUserId, effectiveBusinessId);
     var ordersPageResult =
           orderQueryService.listPaged(
-              userId,
+              currentUserId,
               effectiveBusinessId,
               effectiveStart,
               effectiveEnd,
@@ -311,7 +307,7 @@ public class UiController {
               effectivePageSize);
       var expensesPageResult =
           expenseQueryService.listPaged(
-              userId,
+              currentUserId,
               effectiveBusinessId,
               effectiveStart,
               effectiveEnd,
@@ -320,7 +316,7 @@ public class UiController {
               expensesSortDir,
               safeExpensesPage,
               effectivePageSize);
-    var dashboard = dashboardService.get(userId, effectiveBusinessId, effectiveStart, effectiveEnd);
+    var dashboard = dashboardService.get(currentUserId, effectiveBusinessId, effectiveStart, effectiveEnd);
 
     model.addAttribute("selectedBusiness", selectedBusiness);
     model.addAttribute("platforms", platforms);
@@ -338,7 +334,7 @@ public class UiController {
   private void setupBaseModel(
       Model model,
       String lang,
-      Long userId,
+      boolean isAdmin,
       LocalDate startDate,
       LocalDate endDate,
       Long platformId,
@@ -353,7 +349,7 @@ public class UiController {
       String message,
       String error) {
     model.addAttribute("lang", lang);
-    model.addAttribute("userId", userId);
+    model.addAttribute("isAdmin", isAdmin);
     model.addAttribute("startDate", startDate);
     model.addAttribute("endDate", endDate);
     model.addAttribute("selectedPlatformId", platformId);
@@ -384,27 +380,26 @@ public class UiController {
 
   @PostMapping("/ui/businesses")
   public String createBusiness(
-      @RequestParam Long userId,
       @RequestParam String name,
       @RequestParam(required = false) String gstin,
       @RequestParam(required = false) String address,
       @RequestParam(required = false) String city,
       @RequestParam(required = false) String state,
       @RequestParam(defaultValue = "en") String lang) {
+    Long currentUserId = CurrentUser.id();
     try {
       var created =
           businessService.create(
-              userId, new CreateBusinessRequest(name, gstin, address, city, state));
+              currentUserId, new CreateBusinessRequest(name, gstin, address, city, state));
       return redirectToUi(
-          lang, userId, created.getId(), null, null, null, null, "Business created", null);
+          lang, created.getId(), null, null, null, null, "Business created", null);
     } catch (RuntimeException ex) {
-      return redirectToUi(lang, userId, null, null, null, null, null, null, messageOrDefault(ex));
+      return redirectToUi(lang, null, null, null, null, null, null, messageOrDefault(ex));
     }
   }
 
   @PostMapping("/ui/platforms")
   public String createPlatform(
-      @RequestParam Long userId,
       @RequestParam Long businessId,
       @RequestParam String code,
       @RequestParam String name,
@@ -413,19 +408,19 @@ public class UiController {
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate endDate,
       @RequestParam(defaultValue = "en") String lang) {
+    Long currentUserId = CurrentUser.id();
     try {
-      platformService.create(userId, businessId, new CreatePlatformRequest(code, name));
+      platformService.create(currentUserId, businessId, new CreatePlatformRequest(code, name));
       return redirectToUi(
-          lang, userId, businessId, startDate, endDate, null, null, "Platform created", null);
+          lang, businessId, startDate, endDate, null, null, "Platform created", null);
     } catch (RuntimeException ex) {
       return redirectToUi(
-          lang, userId, businessId, startDate, endDate, null, null, null, messageOrDefault(ex));
+          lang, businessId, startDate, endDate, null, null, null, messageOrDefault(ex));
     }
   }
 
   @PostMapping("/ui/orders")
   public String createOrder(
-      @RequestParam Long userId,
       @RequestParam Long businessId,
       @RequestParam Long platformId,
       @RequestParam("orderDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -440,11 +435,12 @@ public class UiController {
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate endDate,
       @RequestParam(defaultValue = "en") String lang) {
+    Long currentUserId = CurrentUser.id();
     try {
       Instant createdAt = orderDateTime.atZone(ZoneId.systemDefault()).toInstant();
       var created =
           orderService.create(
-              userId,
+              currentUserId,
               businessId,
               platformId,
               new CreateOrderRequest(
@@ -455,16 +451,15 @@ public class UiController {
                   netReceived,
                   notes),
               createdAt);
-      return redirectToInvoice(lang, userId, businessId, created.id(), startDate, endDate, true);
+      return redirectToInvoice(lang, businessId, created.id(), startDate, endDate, true);
     } catch (RuntimeException ex) {
       return redirectToUi(
-          lang, userId, businessId, startDate, endDate, null, null, null, messageOrDefault(ex));
+          lang, businessId, startDate, endDate, null, null, null, messageOrDefault(ex));
     }
   }
 
   @PostMapping("/ui/expenses")
   public String createExpense(
-      @RequestParam Long userId,
       @RequestParam Long businessId,
       @RequestParam("expenseDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
           LocalDateTime expenseDateTime,
@@ -476,25 +471,25 @@ public class UiController {
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate endDate,
       @RequestParam(defaultValue = "en") String lang) {
+    Long currentUserId = CurrentUser.id();
     try {
       Instant createdAt = expenseDateTime.atZone(ZoneId.systemDefault()).toInstant();
       expenseService.create(
-          userId,
+          currentUserId,
           businessId,
           new CreateExpenseRequest(expenseDateTime.toLocalDate(), category, amount, notes),
           createdAt);
       return redirectToUi(
-          lang, userId, businessId, startDate, endDate, null, null, "Expense created", null);
+          lang, businessId, startDate, endDate, null, null, "Expense created", null);
     } catch (RuntimeException ex) {
       return redirectToUi(
-          lang, userId, businessId, startDate, endDate, null, null, null, messageOrDefault(ex));
+          lang, businessId, startDate, endDate, null, null, null, messageOrDefault(ex));
     }
   }
 
   @GetMapping("/ui/orders/{orderId}/invoice")
   public String invoice(
       @PathVariable Long orderId,
-      @RequestParam Long userId,
       @RequestParam Long businessId,
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate startDate,
@@ -503,35 +498,37 @@ public class UiController {
       @RequestParam(defaultValue = "en") String lang,
       @RequestParam(defaultValue = "false") boolean autoPrint,
       Model model) {
+    Long currentUserId = CurrentUser.id();
     try {
-      var invoice = orderQueryService.getInvoice(userId, businessId, orderId);
+      var invoice = orderQueryService.getInvoice(currentUserId, businessId, orderId);
       model.addAttribute("invoice", invoice);
       model.addAttribute("autoPrint", autoPrint);
       model.addAttribute("lang", lang);
-      model.addAttribute("userId", userId);
+      model.addAttribute("isAdmin", CurrentUser.isAdmin());
       model.addAttribute("businessId", businessId);
       model.addAttribute("startDate", startDate);
       model.addAttribute("endDate", endDate);
       return "ui/invoice";
     } catch (RuntimeException ex) {
       return redirectToUi(
-          lang, userId, businessId, startDate, endDate, null, null, null, messageOrDefault(ex));
+          lang, businessId, startDate, endDate, null, null, null, messageOrDefault(ex));
     }
   }
 
   @GetMapping("/ui/export/orders")
   public ResponseEntity<byte[]> exportOrdersExcel(
-      @RequestParam(defaultValue = "1") Long userId,
       @RequestParam Long businessId,
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate startDate,
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate endDate,
       @RequestParam(required = false) Long platformId) {
+    Long currentUserId = CurrentUser.id();
     try {
       LocalDate effectiveStart = startDate == null ? YearMonth.now().atDay(1) : startDate;
       LocalDate effectiveEnd = endDate == null ? LocalDate.now() : endDate;
-      var orders = orderQueryService.list(userId, businessId, effectiveStart, effectiveEnd, platformId);
+      var orders =
+          orderQueryService.list(currentUserId, businessId, effectiveStart, effectiveEnd, platformId);
       byte[] content = ordersWorkbook(orders);
       String filename = "orders_" + businessId + "_" + effectiveStart + "_to_" + effectiveEnd + ".xlsx";
       return excelResponse(content, filename);
@@ -542,18 +539,18 @@ public class UiController {
 
   @GetMapping("/ui/export/expenses")
   public ResponseEntity<byte[]> exportExpensesExcel(
-      @RequestParam(defaultValue = "1") Long userId,
       @RequestParam Long businessId,
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate startDate,
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
           LocalDate endDate,
       @RequestParam(required = false) String category) {
+    Long currentUserId = CurrentUser.id();
     try {
       LocalDate effectiveStart = startDate == null ? YearMonth.now().atDay(1) : startDate;
       LocalDate effectiveEnd = endDate == null ? LocalDate.now() : endDate;
       var expenses =
-          expenseQueryService.list(userId, businessId, effectiveStart, effectiveEnd, category);
+          expenseQueryService.list(currentUserId, businessId, effectiveStart, effectiveEnd, category);
       byte[] content = expensesWorkbook(expenses);
       String filename =
           "expenses_" + businessId + "_" + effectiveStart + "_to_" + effectiveEnd + ".xlsx";
@@ -565,7 +562,6 @@ public class UiController {
 
   private String redirectToUi(
       String lang,
-      Long userId,
       Long businessId,
       LocalDate startDate,
       LocalDate endDate,
@@ -573,9 +569,7 @@ public class UiController {
       String category,
       String message,
       String error) {
-    UriComponentsBuilder b =
-        UriComponentsBuilder.fromPath(pathForLang(lang))
-            .queryParam("userId", userId);
+    UriComponentsBuilder b = UriComponentsBuilder.fromPath(pathForLang(lang));
     if (businessId != null) {
       b.queryParam("businessId", businessId);
     }
@@ -602,7 +596,6 @@ public class UiController {
 
   private String redirectToInvoice(
       String lang,
-      Long userId,
       Long businessId,
       Long orderId,
       LocalDate startDate,
@@ -610,7 +603,6 @@ public class UiController {
       boolean autoPrint) {
     UriComponentsBuilder b =
         UriComponentsBuilder.fromPath("/ui/orders/{orderId}/invoice")
-            .queryParam("userId", userId)
             .queryParam("businessId", businessId)
             .queryParam("lang", lang)
             .queryParam("autoPrint", autoPrint);

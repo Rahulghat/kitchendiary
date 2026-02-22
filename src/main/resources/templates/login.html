@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KitchenDiary Login</title>
+    <link rel="stylesheet" href="/ui.css">
+</head>
+<body>
+<main class="login-shell">
+    <section class="login-card">
+        <img src="/kitchendiary-logo.svg" alt="KitchenDiary logo" class="login-logo">
+        <h1>KitchenDiary Sign In</h1>
+        <p>Use your registered email and password.</p>
+
+        <div class="alert err" th:if="${param.error != null}">
+            Invalid email or password.
+        </div>
+        <div class="alert ok" th:if="${param.logout != null}">
+            You have been logged out.
+        </div>
+
+        <form method="post" action="/login" class="login-form">
+            <label>Email
+                <input type="email" name="username" required autocomplete="username">
+            </label>
+            <label>Password
+                <input type="password" name="password" required autocomplete="current-password">
+            </label>
+            <button type="submit">Sign In</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

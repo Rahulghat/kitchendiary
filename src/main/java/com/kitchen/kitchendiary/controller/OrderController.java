@@ -1,5 +1,6 @@
 package com.kitchen.kitchendiary.controller;
 
+import com.kitchen.kitchendiary.config.CurrentUser;
 import com.kitchen.kitchendiary.dto.CreateOrderRequest;
 import com.kitchen.kitchendiary.dto.OrderResponse;
 import com.kitchen.kitchendiary.service.OrderQueryService;
@@ -24,22 +25,20 @@ public class OrderController {
 
   @PostMapping("/platform/{platformId}")
   public OrderResponse createOrder(
-      @RequestHeader(value = "X-USER-ID", required = false) String userHeader,
       @PathVariable Long businessId,
       @PathVariable Long platformId,
       @Valid @RequestBody CreateOrderRequest req) {
-    Long ownerUserId = RequestUser.requireUserId(userHeader);
+    Long ownerUserId = CurrentUser.id();
     return orderService.create(ownerUserId, businessId, platformId, req);
   }
 
   @GetMapping
   public List<OrderResponse> listOrders(
-      @RequestHeader(value = "X-USER-ID", required = false) String userHeader,
       @PathVariable Long businessId,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
       @RequestParam(required = false) Long platformId) {
-    Long ownerUserId = RequestUser.requireUserId(userHeader);
+    Long ownerUserId = CurrentUser.id();
     return orderQueryService.list(ownerUserId, businessId, startDate, endDate, platformId);
   }
 }

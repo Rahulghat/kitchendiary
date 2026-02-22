@@ -27,11 +27,17 @@ public class User {
   @Column(name = "password_hash", nullable = false)
   private String passwordHash;
 
+  @Column(nullable = false, length = 20)
+  private String role;
+
   @Column(name = "created_at", nullable = false)
   private Instant createdAt;
 
   @PrePersist
   public void prePersist() {
     this.createdAt = Instant.now();
+    if (this.role == null || this.role.isBlank()) {
+      this.role = "USER";
+    }
   }
 }

@@ -1,5 +1,6 @@
 package com.kitchen.kitchendiary.controller;
 
+import com.kitchen.kitchendiary.config.CurrentUser;
 import com.kitchen.kitchendiary.dto.CreatePlatformRequest;
 import com.kitchen.kitchendiary.entities.Platform;
 import com.kitchen.kitchendiary.service.PlatformService;
@@ -19,18 +20,15 @@ public class PlatformController {
 
   @PostMapping
   public Platform createPlatform(
-      @RequestHeader(value = "X-USER-ID", required = false) String userHeader,
       @PathVariable Long businessId,
       @Valid @RequestBody CreatePlatformRequest req) {
-    Long ownerUserId = RequestUser.requireUserId(userHeader);
+    Long ownerUserId = CurrentUser.id();
     return platformService.create(ownerUserId, businessId, req);
   }
 
   @GetMapping
-  public List<Platform> listPlatforms(
-      @RequestHeader(value = "X-USER-ID", required = false) String userHeader,
-      @PathVariable Long businessId) {
-    Long ownerUserId = RequestUser.requireUserId(userHeader);
+  public List<Platform> listPlatforms(@PathVariable Long businessId) {
+    Long ownerUserId = CurrentUser.id();
     return platformService.list(ownerUserId, businessId);
   }
 }

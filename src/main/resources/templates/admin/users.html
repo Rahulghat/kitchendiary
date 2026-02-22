@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin - Users</title>
+    <link rel="stylesheet" href="/ui.css">
+</head>
+<body>
+<main class="login-shell">
+    <section class="login-card admin-users-card">
+        <h1>Create User</h1>
+        <p>Admin-only user management.</p>
+
+        <div class="alert ok" th:if="${param.message != null}" th:text="${param.message}"></div>
+        <div class="alert err" th:if="${param.error != null}" th:text="${param.error}"></div>
+
+        <form method="post" action="/admin/users" class="login-form">
+            <label>Name
+                <input type="text" name="name" required maxlength="120">
+            </label>
+            <label>Email
+                <input type="email" name="email" required maxlength="180">
+            </label>
+            <label>Password
+                <input type="password" name="password" required minlength="6">
+            </label>
+            <label>Role
+                <select name="role">
+                    <option value="USER">USER</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+            </label>
+            <button type="submit">Create User</button>
+        </form>
+
+        <div class="invoice-actions no-print">
+            <a class="button-link" href="/ui">Back to Console</a>
+            <form method="post" action="/logout">
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+
+        <div class="table-wrap admin-users-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Created</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${users == null or users.isEmpty()}">
+                    <td colspan="4">No users found.</td>
+                </tr>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.name}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td th:text="${u.role}"></td>
+                    <td th:text="${u.createdAt != null ? #temporals.format(u.createdAt.atZone(T(java.time.ZoneId).of('Asia/Kolkata')), 'yyyy-MM-dd HH:mm') + ' IST' : '-'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

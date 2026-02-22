@@ -1,5 +1,6 @@
 package com.kitchen.kitchendiary.controller;
 
+import com.kitchen.kitchendiary.config.CurrentUser;
 import com.kitchen.kitchendiary.dto.CreateBusinessRequest;
 import com.kitchen.kitchendiary.entities.Business;
 import com.kitchen.kitchendiary.service.BusinessService;
@@ -18,25 +19,20 @@ public class BusinessController {
   }
 
   @PostMapping
-  public Business createBusiness(
-      @RequestHeader(value = "X-USER-ID", required = false) String userHeader,
-      @Valid @RequestBody CreateBusinessRequest req) {
-    Long ownerUserId = RequestUser.requireUserId(userHeader);
+  public Business createBusiness(@Valid @RequestBody CreateBusinessRequest req) {
+    Long ownerUserId = CurrentUser.id();
     return businessService.create(ownerUserId, req);
   }
 
   @GetMapping
-  public List<Business> listMyBusinesses(
-      @RequestHeader(value = "X-USER-ID", required = false) String userHeader) {
-    Long ownerUserId = RequestUser.requireUserId(userHeader);
+  public List<Business> listMyBusinesses() {
+    Long ownerUserId = CurrentUser.id();
     return businessService.list(ownerUserId);
   }
 
   @GetMapping("/{businessId}")
-  public Business getBusiness(
-      @RequestHeader(value = "X-USER-ID", required = false) String userHeader,
-      @PathVariable Long businessId) {
-    Long ownerUserId = RequestUser.requireUserId(userHeader);
+  public Business getBusiness(@PathVariable Long businessId) {
+    Long ownerUserId = CurrentUser.id();
     return businessService.get(ownerUserId, businessId);
   }
 }
