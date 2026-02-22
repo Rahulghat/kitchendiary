@@ -409,6 +409,72 @@ td a {
     text-decoration: none;
 }
 
+/* Orders/Expenses themed ledger tables */
+.section-head + .table-wrap {
+    border: 1px solid #f0d2ad;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fffdfa, #fff8ef);
+}
+
+.section-head + .table-wrap table {
+    min-width: 760px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.section-head + .table-wrap th {
+    color: #8a4b0f;
+    font-weight: 800;
+    letter-spacing: 0.15px;
+    border-bottom: 1px solid #f0c892;
+    background: linear-gradient(180deg, #ffedd5, #ffe1bd);
+}
+
+.section-head + .table-wrap td {
+    border-bottom: 1px solid #f7dfc3;
+}
+
+.section-head + .table-wrap tbody tr:nth-child(odd) {
+    background: #fffdf9;
+}
+
+.section-head + .table-wrap tbody tr:nth-child(even) {
+    background: #fff7ed;
+}
+
+.section-head + .table-wrap tbody tr:hover {
+    background: #ffefd8;
+}
+
+.section-head + .table-wrap td a {
+    color: #9a3412;
+}
+
+.section-head + .table-wrap td a:hover {
+    color: #7c2d12;
+}
+
+.card:has(.section-head) {
+    border-color: #f0d2ad;
+    background: linear-gradient(180deg, #fffefb, #fffaf3);
+}
+
+.card:has(.section-head) .section-head h2 {
+    color: #8a4b0f;
+}
+
+.card:has(.section-head) .pager a {
+    color: #9a3412;
+    border-color: #f0c892;
+    background: #fff1df;
+}
+
+.card:has(.section-head) .pager span {
+    color: #7c5a3f;
+    border-color: #f3d7b2;
+    background: #fff8ef;
+}
+
 @media (max-width: 900px) {
     .columns {
         grid-template-columns: 1fr;

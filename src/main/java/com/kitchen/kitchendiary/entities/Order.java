@@ -68,8 +68,12 @@ public class Order {
 
   @PrePersist
   public void prePersist() {
-    this.createdAt = Instant.now();
-    this.updatedAt = Instant.now();
+    if (this.createdAt == null) {
+      this.createdAt = Instant.now();
+    }
+    if (this.updatedAt == null) {
+      this.updatedAt = this.createdAt;
+    }
   }
 
   @PreUpdate

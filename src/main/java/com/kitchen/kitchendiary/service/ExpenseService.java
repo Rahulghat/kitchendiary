@@ -4,6 +4,7 @@ import com.kitchen.kitchendiary.dto.CreateExpenseRequest;
 import com.kitchen.kitchendiary.dto.ExpenseResponse;
 import com.kitchen.kitchendiary.entities.Expense;
 import com.kitchen.kitchendiary.repositories.ExpenseRepository;
+import java.time.Instant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,12 @@ public class ExpenseService {
 
   @Transactional
   public ExpenseResponse create(Long ownerUserId, Long businessId, CreateExpenseRequest req) {
+    return create(ownerUserId, businessId, req, null);
+  }
+
+  @Transactional
+  public ExpenseResponse create(
+      Long ownerUserId, Long businessId, CreateExpenseRequest req, Instant createdAtOverride) {
     var business = businessAccessService.getBusinessOrThrow(ownerUserId, businessId);
 
     Expense e = new Expense();
@@ -29,6 +36,9 @@ public class ExpenseService {
     e.setCategory(req.category());
     e.setAmount(req.amount());
     e.setNotes(req.notes());
+    if (createdAtOverride != null) {
+      e.setCreatedAt(createdAtOverride);
+    }
 
     Expense saved = expenseRepository.save(e);
 
@@ -38,6 +48,7 @@ public class ExpenseService {
         saved.getExpenseDate(),
         saved.getCategory(),
         saved.getAmount(),
-        saved.getNotes());
+        saved.getNotes(),
+        saved.getCreatedAt());
   }
 }

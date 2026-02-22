@@ -70,6 +70,7 @@ public class ExpenseQueryService {
         expense.getExpenseDate(),
         expense.getCategory(),
         expense.getAmount(),
-        expense.getNotes());
+        expense.getNotes(),
+        expense.getCreatedAt());
   }
 }

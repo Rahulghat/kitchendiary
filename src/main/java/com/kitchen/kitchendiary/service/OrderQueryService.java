@@ -35,9 +35,7 @@ public class OrderQueryService {
             : orderRepository.findAllByBusinessIdAndPlatformIdAndOrderDateBetween(
                 businessId, platformId, startDate, endDate);
 
-    return orders.stream()
-        .map(this::toOrderResponse)
-        .toList();
+    return orders.stream().map(this::toOrderResponse).toList();
   }
 
   @Transactional(readOnly = true)
@@ -94,7 +92,8 @@ public class OrderQueryService {
         order.getNetExpected(),
         order.getNetReceived(),
         order.getMismatchAmount(),
-        order.getNotes());
+        order.getNotes(),
+        order.getCreatedAt());
   }
 
   private OrderResponse toOrderResponse(Order order) {
@@ -111,6 +110,7 @@ public class OrderQueryService {
         order.getNetExpected(),
         order.getNetReceived(),
         order.getMismatchAmount(),
-        order.getNotes());
+        order.getNotes(),
+        order.getCreatedAt());
   }
 }

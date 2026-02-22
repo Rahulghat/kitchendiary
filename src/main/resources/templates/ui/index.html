@@ -143,8 +143,8 @@
                         <option th:each="p : ${platforms}" th:value="${p.id}" th:text="${p.name + ' (' + p.code + ')'}"></option>
                     </select>
                 </label>
-                <label>Order Date
-                    <input type="date" name="orderDate" required>
+                <label>Order Date & Time
+                    <input type="datetime-local" name="orderDateTime" required>
                 </label>
                 <label>Gross Amount
                     <input type="number" name="grossAmount" step="0.01" min="0" required>
@@ -173,8 +173,8 @@
                 <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
                 <input type="hidden" name="startDate" th:value="${startDate}">
                 <input type="hidden" name="endDate" th:value="${endDate}">
-                <label>Expense Date
-                    <input type="date" name="expenseDate" required>
+                <label>Expense Date & Time
+                    <input type="datetime-local" name="expenseDateTime" required>
                 </label>
                 <label>Category
                     <input type="text" name="category" maxlength="80" required>
@@ -240,7 +240,7 @@
                 </tr>
                 <tr th:each="o : ${orders}">
                     <td th:text="${o.id}"></td>
-                    <td th:text="${o.orderDate}"></td>
+                    <td th:text="${o.createdAt != null ? o.orderDate + ' ' + #strings.substring(o.createdAt.toString(), 11, 16) : o.orderDate}"></td>
                     <td th:text="${o.platformId}"></td>
                     <td th:text="${o.grossAmount}"></td>
                     <td th:text="${o.commissionAmount}"></td>
@@ -298,7 +298,7 @@
                 </tr>
                 <tr th:each="e : ${expenses}">
                     <td th:text="${e.id}"></td>
-                    <td th:text="${e.expenseDate}"></td>
+                    <td th:text="${e.createdAt != null ? e.expenseDate + ' ' + #strings.substring(e.createdAt.toString(), 11, 16) : e.expenseDate}"></td>
                     <td th:text="${e.category}"></td>
                     <td th:text="${e.amount}"></td>
                     <td th:text="${e.notes}"></td>

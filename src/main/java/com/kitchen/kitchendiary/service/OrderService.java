@@ -7,6 +7,7 @@ import com.kitchen.kitchendiary.entities.Order;
 import com.kitchen.kitchendiary.entities.Platform;
 import com.kitchen.kitchendiary.repositories.OrderRepository;
 import com.kitchen.kitchendiary.repositories.PlatformRepository;
+import java.time.Instant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,16 @@ public class OrderService {
   @Transactional
   public OrderResponse create(
       Long ownerUserId, Long businessId, Long platformId, CreateOrderRequest req) {
+    return create(ownerUserId, businessId, platformId, req, null);
+  }
+
+  @Transactional
+  public OrderResponse create(
+      Long ownerUserId,
+      Long businessId,
+      Long platformId,
+      CreateOrderRequest req,
+      Instant createdAtOverride) {
     Business business = businessAccessService.getBusinessOrThrow(ownerUserId, businessId);
 
     Platform platform =
@@ -57,6 +68,10 @@ public class OrderService {
     o.setNetReceived(req.netReceived());
     o.setMismatchAmount(computed.mismatchAmount());
     o.setNotes(req.notes());
+    if (createdAtOverride != null) {
+      o.setCreatedAt(createdAtOverride);
+      o.setUpdatedAt(createdAtOverride);
+    }
 
     Order saved = orderRepository.save(o);
 
@@ -73,6 +88,7 @@ public class OrderService {
         saved.getNetExpected(),
         saved.getNetReceived(),
         saved.getMismatchAmount(),
-        saved.getNotes());
+        saved.getNotes(),
+        saved.getCreatedAt());
   }
 }

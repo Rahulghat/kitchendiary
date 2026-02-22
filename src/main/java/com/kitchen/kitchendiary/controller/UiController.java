@@ -16,7 +16,10 @@ import com.kitchen.kitchendiary.service.PlatformService;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.YearMonth;
 import java.util.List;
 import org.apache.poi.ss.usermodel.Row;
@@ -373,7 +376,8 @@ public class UiController {
       @RequestParam Long userId,
       @RequestParam Long businessId,
       @RequestParam Long platformId,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate orderDate,
+      @RequestParam("orderDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+          LocalDateTime orderDateTime,
       @RequestParam BigDecimal grossAmount,
       @RequestParam BigDecimal commissionRate,
       @RequestParam BigDecimal gstRateOnComm,
@@ -385,13 +389,20 @@ public class UiController {
           LocalDate endDate,
       @RequestParam(defaultValue = "en") String lang) {
     try {
+      Instant createdAt = orderDateTime.atZone(ZoneId.systemDefault()).toInstant();
       var created =
           orderService.create(
               userId,
               businessId,
               platformId,
               new CreateOrderRequest(
-                  orderDate, grossAmount, commissionRate, gstRateOnComm, netReceived, notes));
+                  orderDateTime.toLocalDate(),
+                  grossAmount,
+                  commissionRate,
+                  gstRateOnComm,
+                  netReceived,
+                  notes),
+              createdAt);
       return redirectToInvoice(lang, userId, businessId, created.id(), startDate, endDate, true);
     } catch (RuntimeException ex) {
       return redirectToUi(
@@ -403,7 +414,8 @@ public class UiController {
   public String createExpense(
       @RequestParam Long userId,
       @RequestParam Long businessId,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expenseDate,
+      @RequestParam("expenseDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+          LocalDateTime expenseDateTime,
       @RequestParam String category,
       @RequestParam BigDecimal amount,
       @RequestParam(required = false) String notes,
@@ -413,8 +425,12 @@ public class UiController {
           LocalDate endDate,
       @RequestParam(defaultValue = "en") String lang) {
     try {
+      Instant createdAt = expenseDateTime.atZone(ZoneId.systemDefault()).toInstant();
       expenseService.create(
-          userId, businessId, new CreateExpenseRequest(expenseDate, category, amount, notes));
+          userId,
+          businessId,
+          new CreateExpenseRequest(expenseDateTime.toLocalDate(), category, amount, notes),
+          createdAt);
       return redirectToUi(
           lang, userId, businessId, startDate, endDate, null, null, "Expense created", null);
     } catch (RuntimeException ex) {

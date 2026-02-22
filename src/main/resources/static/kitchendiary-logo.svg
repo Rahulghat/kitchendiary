@@ -1,23 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="80" viewBox="0 0 320 80" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="92" viewBox="0 0 360 92" role="img" aria-labelledby="title desc">
   <title id="title">KitchenDiary Logo</title>
-  <desc id="desc">A pot icon with steam and the KitchenDiary wordmark.</desc>
+  <desc id="desc">Rounded badge with pot and steam icon followed by KitchenDiary wordmark.</desc>
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#006d5b"/>
-      <stop offset="100%" stop-color="#00a176"/>
+    <linearGradient id="bg" x1="8%" y1="5%" x2="92%" y2="95%">
+      <stop offset="0%" stop-color="#fff8eb"/>
+      <stop offset="100%" stop-color="#ffe7c7"/>
+    </linearGradient>
+    <linearGradient id="pot" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="steam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ea580c"/>
     </linearGradient>
   </defs>
-  <rect x="0" y="0" width="320" height="80" fill="none"/>
+
+  <rect x="0" y="0" width="360" height="92" rx="16" fill="none"/>
+
   <g transform="translate(8,8)">
-    <circle cx="32" cy="32" r="30" fill="#e7f8f0"/>
-    <rect x="16" y="30" width="32" height="14" rx="4" fill="url(#g)"/>
-    <rect x="13" y="27" width="38" height="5" rx="2.5" fill="#004f42"/>
-    <path d="M20 22c3-3 1-6-1-8" stroke="#006d5b" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <path d="M30 21c3-3 1-7-1-10" stroke="#00a176" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <path d="M40 22c3-3 1-6-1-8" stroke="#006d5b" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <rect x="0" y="0" width="76" height="76" rx="20" fill="url(#bg)"/>
+    <rect x="17" y="34" width="42" height="18" rx="8" fill="url(#pot)"/>
+    <rect x="14" y="30" width="48" height="7" rx="3.5" fill="#8a3f08"/>
+    <path d="M26 26c4-4 2-8 0-11" stroke="url(#steam)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M38 24c4-5 2-10 0-14" stroke="url(#steam)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M50 26c4-4 2-8 0-11" stroke="url(#steam)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="58" cy="19" r="4.5" fill="#fff1dc" stroke="#efb977"/>
   </g>
-  <g transform="translate(76,18)" fill="#12263a">
-    <text x="0" y="22" font-family="Segoe UI, Trebuchet MS, sans-serif" font-size="24" font-weight="700">KitchenDiary</text>
-    <text x="0" y="44" font-family="Segoe UI, Trebuchet MS, sans-serif" font-size="12" fill="#5b6b7a">Food business journal</text>
+
+  <g transform="translate(96,18)">
+    <text x="0" y="28" font-family="Segoe UI, Trebuchet MS, sans-serif" font-size="34" font-weight="700" fill="#172b3f">KitchenDiary</text>
+    <text x="2" y="50" font-family="Segoe UI, Trebuchet MS, sans-serif" font-size="12.5" font-weight="600" letter-spacing="0.7" fill="#8a4b0f">COOK. TRACK. GROW.</text>
   </g>
 </svg>

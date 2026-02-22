@@ -1,6 +1,7 @@
 package com.kitchen.kitchendiary.dto;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 
 public record ExpenseResponse(
@@ -9,4 +10,5 @@ public record ExpenseResponse(
     LocalDate expenseDate,
     String category,
     BigDecimal amount,
-    String notes) {}
+    String notes,
+    Instant createdAt) {}
