@@ -56,7 +56,81 @@ body::after {
 .page {
     width: min(1200px, 94vw);
     margin: 0 auto;
-    padding: 24px 0 60px;
+    padding: 24px 320px 60px 0;
+    position: relative;
+}
+
+.ad-rail {
+    position: absolute;
+    top: 24px;
+    right: 0;
+    width: 290px;
+}
+
+.ad-slot {
+    position: sticky;
+    top: 18px;
+    border: 1px dashed #e5b67b;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fff7ec, #fff2e1);
+    padding: 12px;
+    box-shadow: 0 10px 24px rgba(180, 83, 9, 0.14);
+}
+
+.ad-label {
+    margin: 0 0 8px;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #8a4b0f;
+    text-transform: uppercase;
+}
+
+.ad-media {
+    min-height: 300px;
+    border-radius: 10px;
+    border: 1px solid #f0c892;
+    background: linear-gradient(135deg, #9a3412, #d97706 65%, #f59e0b);
+    color: #fff7ec;
+    display: grid;
+    align-content: center;
+    gap: 6px;
+    padding: 16px 14px;
+}
+
+.ad-media strong {
+    font-size: 1.1rem;
+    line-height: 1.2;
+}
+
+.ad-media span {
+    font-size: 0.86rem;
+    color: #ffedd5;
+}
+
+.ad-copy {
+    margin: 10px 0 0;
+    color: #7c5a3f;
+    font-size: 0.82rem;
+}
+
+.ad-cta {
+    margin-top: 10px;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 9px 10px;
+    color: #fff;
+    font-weight: 800;
+    background: linear-gradient(135deg, #b45309, #f59e0b);
+}
+
+.ad-meta {
+    margin: 10px 0 0;
+    font-size: 0.78rem;
+    color: #6f4c31;
 }
 
 .hero {
@@ -252,6 +326,20 @@ body::after {
 
 .section-head h2 {
     margin: 0;
+}
+
+.sort-inline {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sort-inline select {
+    min-width: 140px;
+}
+
+.sort-inline button {
+    padding: 8px 10px;
 }
 
 .pager {
@@ -476,6 +564,24 @@ td a {
 }
 
 @media (max-width: 900px) {
+    .page {
+        padding-right: 0;
+    }
+
+    .ad-rail {
+        position: static;
+        width: 100%;
+        margin: 0 0 14px;
+    }
+
+    .ad-slot {
+        position: static;
+    }
+
+    .ad-media {
+        min-height: 150px;
+    }
+
     .columns {
         grid-template-columns: 1fr;
     }
@@ -486,6 +592,10 @@ td a {
 
     .banner-badge {
         width: fit-content;
+    }
+
+    .section-head {
+        flex-wrap: wrap;
     }
 }
 

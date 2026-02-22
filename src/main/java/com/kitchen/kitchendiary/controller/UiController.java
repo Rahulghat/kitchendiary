@@ -94,6 +94,10 @@ public class UiController {
           LocalDate endDate,
       @RequestParam(required = false) Long platformId,
       @RequestParam(required = false) String category,
+      @RequestParam(defaultValue = "orderDate") String ordersSortBy,
+      @RequestParam(defaultValue = "desc") String ordersSortDir,
+      @RequestParam(defaultValue = "expenseDate") String expensesSortBy,
+      @RequestParam(defaultValue = "desc") String expensesSortDir,
       @RequestParam(defaultValue = "0") int ordersPage,
       @RequestParam(defaultValue = "0") int expensesPage,
       @RequestParam(defaultValue = "10") int pageSize,
@@ -107,6 +111,10 @@ public class UiController {
         endDate,
         platformId,
         category,
+        ordersSortBy,
+        ordersSortDir,
+        expensesSortBy,
+        expensesSortDir,
         ordersPage,
         expensesPage,
         pageSize,
@@ -125,6 +133,10 @@ public class UiController {
           LocalDate endDate,
       @RequestParam(required = false) Long platformId,
       @RequestParam(required = false) String category,
+      @RequestParam(defaultValue = "orderDate") String ordersSortBy,
+      @RequestParam(defaultValue = "desc") String ordersSortDir,
+      @RequestParam(defaultValue = "expenseDate") String expensesSortBy,
+      @RequestParam(defaultValue = "desc") String expensesSortDir,
       @RequestParam(defaultValue = "0") int ordersPage,
       @RequestParam(defaultValue = "0") int expensesPage,
       @RequestParam(defaultValue = "10") int pageSize,
@@ -138,6 +150,10 @@ public class UiController {
         endDate,
         platformId,
         category,
+        ordersSortBy,
+        ordersSortDir,
+        expensesSortBy,
+        expensesSortDir,
         ordersPage,
         expensesPage,
         pageSize,
@@ -156,6 +172,10 @@ public class UiController {
           LocalDate endDate,
       @RequestParam(required = false) Long platformId,
       @RequestParam(required = false) String category,
+      @RequestParam(defaultValue = "orderDate") String ordersSortBy,
+      @RequestParam(defaultValue = "desc") String ordersSortDir,
+      @RequestParam(defaultValue = "expenseDate") String expensesSortBy,
+      @RequestParam(defaultValue = "desc") String expensesSortDir,
       @RequestParam(defaultValue = "0") int ordersPage,
       @RequestParam(defaultValue = "0") int expensesPage,
       @RequestParam(defaultValue = "10") int pageSize,
@@ -169,6 +189,10 @@ public class UiController {
         endDate,
         platformId,
         category,
+        ordersSortBy,
+        ordersSortDir,
+        expensesSortBy,
+        expensesSortDir,
         ordersPage,
         expensesPage,
         pageSize,
@@ -185,6 +209,10 @@ public class UiController {
       LocalDate endDate,
       Long platformId,
       String category,
+      String ordersSortBy,
+      String ordersSortDir,
+      String expensesSortBy,
+      String expensesSortDir,
       int ordersPage,
       int expensesPage,
       int pageSize,
@@ -205,6 +233,10 @@ public class UiController {
         effectiveEnd,
         platformId,
         category,
+        ordersSortBy,
+        ordersSortDir,
+        expensesSortBy,
+        expensesSortDir,
         safeOrdersPage,
         safeExpensesPage,
         effectivePageSize,
@@ -234,6 +266,10 @@ public class UiController {
           effectiveEnd,
           platformId,
           category,
+          ordersSortBy,
+          ordersSortDir,
+          expensesSortBy,
+          expensesSortDir,
           safeOrdersPage,
           safeExpensesPage,
           effectivePageSize);
@@ -253,6 +289,10 @@ public class UiController {
       LocalDate effectiveEnd,
       Long platformId,
       String category,
+      String ordersSortBy,
+      String ordersSortDir,
+      String expensesSortBy,
+      String expensesSortDir,
       int safeOrdersPage,
       int safeExpensesPage,
       int effectivePageSize) {
@@ -265,6 +305,8 @@ public class UiController {
               effectiveStart,
               effectiveEnd,
               platformId,
+              ordersSortBy,
+              ordersSortDir,
               safeOrdersPage,
               effectivePageSize);
       var expensesPageResult =
@@ -274,6 +316,8 @@ public class UiController {
               effectiveStart,
               effectiveEnd,
               category,
+              expensesSortBy,
+              expensesSortDir,
               safeExpensesPage,
               effectivePageSize);
     var dashboard = dashboardService.get(userId, effectiveBusinessId, effectiveStart, effectiveEnd);
@@ -299,6 +343,10 @@ public class UiController {
       LocalDate endDate,
       Long platformId,
       String category,
+      String ordersSortBy,
+      String ordersSortDir,
+      String expensesSortBy,
+      String expensesSortDir,
       int ordersPage,
       int expensesPage,
       int pageSize,
@@ -310,6 +358,10 @@ public class UiController {
     model.addAttribute("endDate", endDate);
     model.addAttribute("selectedPlatformId", platformId);
     model.addAttribute("category", category == null ? "" : category);
+    model.addAttribute("ordersSortBy", ordersSortBy == null || ordersSortBy.isBlank() ? "orderDate" : ordersSortBy);
+    model.addAttribute("ordersSortDir", "asc".equalsIgnoreCase(ordersSortDir) ? "asc" : "desc");
+    model.addAttribute("expensesSortBy", expensesSortBy == null || expensesSortBy.isBlank() ? "expenseDate" : expensesSortBy);
+    model.addAttribute("expensesSortDir", "asc".equalsIgnoreCase(expensesSortDir) ? "asc" : "desc");
     model.addAttribute("ordersPage", ordersPage);
     model.addAttribute("expensesPage", expensesPage);
     model.addAttribute("pageSize", pageSize);

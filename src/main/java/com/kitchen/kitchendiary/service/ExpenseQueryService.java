@@ -5,8 +5,10 @@ import com.kitchen.kitchendiary.entities.Expense;
 import com.kitchen.kitchendiary.repositories.ExpenseRepository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,11 +49,18 @@ public class ExpenseQueryService {
       LocalDate startDate,
       LocalDate endDate,
       String category,
+      String sortBy,
+      String sortDir,
       int page,
       int size) {
 
     businessAccessService.getBusinessOrThrow(ownerUserId, businessId);
-    var pageable = PageRequest.of(Math.max(0, page), Math.max(1, size));
+    var allowedSorts = Set.of("id", "expenseDate", "category", "amount", "createdAt");
+    String effectiveSortBy = allowedSorts.contains(sortBy) ? sortBy : "expenseDate";
+    Sort.Direction direction =
+        "asc".equalsIgnoreCase(sortDir) ? Sort.Direction.ASC : Sort.Direction.DESC;
+    var pageable =
+        PageRequest.of(Math.max(0, page), Math.max(1, size), Sort.by(direction, effectiveSortBy));
 
     var expensesPage =
         (category == null || category.isBlank())

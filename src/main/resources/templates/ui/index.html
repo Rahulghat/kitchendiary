@@ -8,6 +8,18 @@
 </head>
 <body>
 <div class="page">
+    <aside class="ad-rail" aria-label="Ad space">
+        <div class="ad-slot">
+            <p class="ad-label">Sponsored</p>
+            <div class="ad-media">
+                <strong>Cloud Kitchen Pro</strong>
+                <span>Increase repeat orders by 32%</span>
+            </div>
+            <p class="ad-copy">Try smart WhatsApp campaigns for your kitchen business.</p>
+            <a class="ad-cta" href="#" aria-label="Start free trial">Start Free Trial</a>
+            <p class="ad-meta">Use code <strong>KDSTART</strong> for 20% off first month.</p>
+        </div>
+    </aside>
     <header class="hero">
         <div class="brand">
             <img src="/kitchendiary-logo.svg" alt="KitchenDiary logo">
@@ -79,6 +91,10 @@
             </label>
             <input type="hidden" name="ordersPage" value="0">
             <input type="hidden" name="expensesPage" value="0">
+            <input type="hidden" name="ordersSortBy" th:value="${ordersSortBy}">
+            <input type="hidden" name="ordersSortDir" th:value="${ordersSortDir}">
+            <input type="hidden" name="expensesSortBy" th:value="${expensesSortBy}">
+            <input type="hidden" name="expensesSortDir" th:value="${expensesSortDir}">
             <button type="submit">Apply Filters</button>
         </form>
     </section>
@@ -205,9 +221,36 @@
         <p th:if="${dashboard == null}">Select a business to view dashboard metrics.</p>
     </section>
 
-    <section class="card">
+    <section class="card" id="orders-grid-card">
         <div class="section-head">
             <h2>Orders</h2>
+            <form method="get" action="/ui" class="sort-inline" data-grid="orders">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
+                <input type="hidden" name="startDate" th:value="${startDate}">
+                <input type="hidden" name="endDate" th:value="${endDate}">
+                <input type="hidden" name="platformId" th:value="${selectedPlatformId}">
+                <input type="hidden" name="category" th:value="${category}">
+                <input type="hidden" name="pageSize" th:value="${pageSize}">
+                <input type="hidden" name="ordersPage" value="0">
+                <input type="hidden" name="expensesPage" th:value="${expensesPage}">
+                <input type="hidden" name="expensesSortBy" th:value="${expensesSortBy}">
+                <input type="hidden" name="expensesSortDir" th:value="${expensesSortDir}">
+                <select name="ordersSortBy">
+                    <option value="orderDate" th:selected="${ordersSortBy == 'orderDate'}">Sort: Date</option>
+                    <option value="grossAmount" th:selected="${ordersSortBy == 'grossAmount'}">Sort: Gross</option>
+                    <option value="commissionAmount" th:selected="${ordersSortBy == 'commissionAmount'}">Sort: Commission</option>
+                    <option value="netReceived" th:selected="${ordersSortBy == 'netReceived'}">Sort: Net Received</option>
+                    <option value="mismatchAmount" th:selected="${ordersSortBy == 'mismatchAmount'}">Sort: Mismatch</option>
+                    <option value="createdAt" th:selected="${ordersSortBy == 'createdAt'}">Sort: Created Time</option>
+                    <option value="id" th:selected="${ordersSortBy == 'id'}">Sort: ID</option>
+                </select>
+                <select name="ordersSortDir">
+                    <option value="desc" th:selected="${ordersSortDir == 'desc'}">Desc</option>
+                    <option value="asc" th:selected="${ordersSortDir == 'asc'}">Asc</option>
+                </select>
+                <button type="submit">Sort</button>
+            </form>
             <form method="get" action="/ui/export/orders">
                 <input type="hidden" name="userId" th:value="${userId}">
                 <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
@@ -240,7 +283,7 @@
                 </tr>
                 <tr th:each="o : ${orders}">
                     <td th:text="${o.id}"></td>
-                    <td th:text="${o.createdAt != null ? o.orderDate + ' ' + #strings.substring(o.createdAt.toString(), 11, 16) : o.orderDate}"></td>
+                    <td th:text="${o.createdAt != null ? #temporals.format(o.createdAt.atZone(T(java.time.ZoneId).of('Asia/Kolkata')), 'yyyy-MM-dd HH:mm') : o.orderDate}"></td>
                     <td th:text="${o.platformId}"></td>
                     <td th:text="${o.grossAmount}"></td>
                     <td th:text="${o.commissionAmount}"></td>
@@ -258,20 +301,45 @@
         </div>
         <div class="pager" th:if="${selectedBusinessId != null}">
             <a th:if="${ordersHasPrev}"
-               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersPage=${ordersPage - 1},expensesPage=${expensesPage},pageSize=${pageSize})}">
+               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy=${ordersSortBy},ordersSortDir=${ordersSortDir},expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=${ordersPage - 1},expensesPage=${expensesPage},pageSize=${pageSize})}">
                 Previous
             </a>
             <span th:text="${(ordersTotalPages == 0 ? 0 : ordersPage + 1) + ' / ' + ordersTotalPages}"></span>
             <a th:if="${ordersHasNext}"
-               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersPage=${ordersPage + 1},expensesPage=${expensesPage},pageSize=${pageSize})}">
+               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy=${ordersSortBy},ordersSortDir=${ordersSortDir},expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=${ordersPage + 1},expensesPage=${expensesPage},pageSize=${pageSize})}">
                 Next
             </a>
         </div>
     </section>
 
-    <section class="card">
+    <section class="card" id="expenses-grid-card">
         <div class="section-head">
             <h2>Expenses</h2>
+            <form method="get" action="/ui" class="sort-inline" data-grid="expenses">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
+                <input type="hidden" name="startDate" th:value="${startDate}">
+                <input type="hidden" name="endDate" th:value="${endDate}">
+                <input type="hidden" name="platformId" th:value="${selectedPlatformId}">
+                <input type="hidden" name="category" th:value="${category}">
+                <input type="hidden" name="pageSize" th:value="${pageSize}">
+                <input type="hidden" name="ordersPage" th:value="${ordersPage}">
+                <input type="hidden" name="expensesPage" value="0">
+                <input type="hidden" name="ordersSortBy" th:value="${ordersSortBy}">
+                <input type="hidden" name="ordersSortDir" th:value="${ordersSortDir}">
+                <select name="expensesSortBy">
+                    <option value="expenseDate" th:selected="${expensesSortBy == 'expenseDate'}">Sort: Date</option>
+                    <option value="category" th:selected="${expensesSortBy == 'category'}">Sort: Category</option>
+                    <option value="amount" th:selected="${expensesSortBy == 'amount'}">Sort: Amount</option>
+                    <option value="createdAt" th:selected="${expensesSortBy == 'createdAt'}">Sort: Created Time</option>
+                    <option value="id" th:selected="${expensesSortBy == 'id'}">Sort: ID</option>
+                </select>
+                <select name="expensesSortDir">
+                    <option value="desc" th:selected="${expensesSortDir == 'desc'}">Desc</option>
+                    <option value="asc" th:selected="${expensesSortDir == 'asc'}">Asc</option>
+                </select>
+                <button type="submit">Sort</button>
+            </form>
             <form method="get" action="/ui/export/expenses">
                 <input type="hidden" name="userId" th:value="${userId}">
                 <input type="hidden" name="businessId" th:value="${selectedBusinessId}">
@@ -298,7 +366,7 @@
                 </tr>
                 <tr th:each="e : ${expenses}">
                     <td th:text="${e.id}"></td>
-                    <td th:text="${e.createdAt != null ? e.expenseDate + ' ' + #strings.substring(e.createdAt.toString(), 11, 16) : e.expenseDate}"></td>
+                    <td th:text="${e.createdAt != null ? #temporals.format(e.createdAt.atZone(T(java.time.ZoneId).of('Asia/Kolkata')), 'yyyy-MM-dd HH:mm') : e.expenseDate}"></td>
                     <td th:text="${e.category}"></td>
                     <td th:text="${e.amount}"></td>
                     <td th:text="${e.notes}"></td>
@@ -308,16 +376,21 @@
         </div>
         <div class="pager" th:if="${selectedBusinessId != null}">
             <a th:if="${expensesHasPrev}"
-               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersPage=${ordersPage},expensesPage=${expensesPage - 1},pageSize=${pageSize})}">
+               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy=${ordersSortBy},ordersSortDir=${ordersSortDir},expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=${ordersPage},expensesPage=${expensesPage - 1},pageSize=${pageSize})}">
                 Previous
             </a>
             <span th:text="${(expensesTotalPages == 0 ? 0 : expensesPage + 1) + ' / ' + expensesTotalPages}"></span>
             <a th:if="${expensesHasNext}"
-               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersPage=${ordersPage},expensesPage=${expensesPage + 1},pageSize=${pageSize})}">
+               th:href="@{/ui(userId=${userId},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy=${ordersSortBy},ordersSortDir=${ordersSortDir},expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=${ordersPage},expensesPage=${expensesPage + 1},pageSize=${pageSize})}">
                 Next
             </a>
         </div>
     </section>
 </div>
+<script src="/ui-grid-ajax.js"></script>
 </body>
 </html>
+
+
+
+
