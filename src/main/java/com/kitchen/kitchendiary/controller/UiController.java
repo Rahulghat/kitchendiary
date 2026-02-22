@@ -196,6 +196,66 @@ public class UiController {
         model);
   }
 
+  @GetMapping("/ui/lists")
+  public String listsWindow(
+      @RequestParam(defaultValue = "en") String lang,
+      @RequestParam(required = false) Long businessId,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+          LocalDate startDate,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+          LocalDate endDate,
+      @RequestParam(required = false) Long platformId,
+      @RequestParam(required = false) String category,
+      @RequestParam(defaultValue = "orderDate") String ordersSortBy,
+      @RequestParam(defaultValue = "desc") String ordersSortDir,
+      @RequestParam(defaultValue = "expenseDate") String expensesSortBy,
+      @RequestParam(defaultValue = "desc") String expensesSortDir,
+      @RequestParam(defaultValue = "0") int ordersPage,
+      @RequestParam(defaultValue = "0") int expensesPage,
+      @RequestParam(defaultValue = "10") int pageSize,
+      Model model) {
+    Long currentUserId = CurrentUser.id();
+    List<com.kitchen.kitchendiary.entities.Business> businesses = businessService.list(currentUserId);
+
+    Long effectiveBusinessId = businessId;
+    if (effectiveBusinessId == null && !businesses.isEmpty()) {
+      effectiveBusinessId = businesses.get(0).getId();
+    }
+
+    List<com.kitchen.kitchendiary.entities.Platform> platforms = List.of();
+    if (effectiveBusinessId != null) {
+      try {
+        platforms = platformService.list(currentUserId, effectiveBusinessId);
+      } catch (RuntimeException ex) {
+        model.addAttribute("error", messageOrDefault(ex));
+      }
+    }
+
+    LocalDate effectiveStart = startDate == null ? YearMonth.now().atDay(1) : startDate;
+    LocalDate effectiveEnd = endDate == null ? LocalDate.now() : endDate;
+    int effectivePageSize = Math.min(Math.max(pageSize, MIN_PAGE_SIZE), MAX_PAGE_SIZE);
+
+    model.addAttribute("lang", lang);
+    model.addAttribute("isAdmin", CurrentUser.isAdmin());
+    model.addAttribute("loggedInEmail", CurrentUser.email());
+    model.addAttribute("loggedInRole", CurrentUser.role());
+    model.addAttribute("selectedBusinessId", effectiveBusinessId);
+    model.addAttribute("selectedPlatformId", platformId);
+    model.addAttribute("startDate", effectiveStart);
+    model.addAttribute("endDate", effectiveEnd);
+    model.addAttribute("category", category == null ? "" : category);
+    model.addAttribute("ordersSortBy", ordersSortBy);
+    model.addAttribute("ordersSortDir", ordersSortDir);
+    model.addAttribute("expensesSortBy", expensesSortBy);
+    model.addAttribute("expensesSortDir", expensesSortDir);
+    model.addAttribute("ordersPage", Math.max(0, ordersPage));
+    model.addAttribute("expensesPage", Math.max(0, expensesPage));
+    model.addAttribute("pageSize", effectivePageSize);
+    model.addAttribute("businesses", businesses);
+    model.addAttribute("platforms", platforms);
+    return "ui/lists";
+  }
+
   private String renderUi(
       String lang,
       Long businessId,
@@ -215,6 +275,8 @@ public class UiController {
       Model model) {
     Long currentUserId = CurrentUser.id();
     boolean isAdmin = CurrentUser.isAdmin();
+    String loggedInEmail = CurrentUser.email();
+    String loggedInRole = CurrentUser.role();
     LocalDate effectiveStart = startDate == null ? YearMonth.now().atDay(1) : startDate;
     LocalDate effectiveEnd = endDate == null ? LocalDate.now() : endDate;
     int effectivePageSize = Math.min(Math.max(pageSize, MIN_PAGE_SIZE), MAX_PAGE_SIZE);
@@ -225,6 +287,8 @@ public class UiController {
         model,
         lang,
         isAdmin,
+        loggedInEmail,
+        loggedInRole,
         effectiveStart,
         effectiveEnd,
         platformId,
@@ -335,6 +399,8 @@ public class UiController {
       Model model,
       String lang,
       boolean isAdmin,
+      String loggedInEmail,
+      String loggedInRole,
       LocalDate startDate,
       LocalDate endDate,
       Long platformId,
@@ -350,6 +416,8 @@ public class UiController {
       String error) {
     model.addAttribute("lang", lang);
     model.addAttribute("isAdmin", isAdmin);
+    model.addAttribute("loggedInEmail", loggedInEmail);
+    model.addAttribute("loggedInRole", loggedInRole);
     model.addAttribute("startDate", startDate);
     model.addAttribute("endDate", endDate);
     model.addAttribute("selectedPlatformId", platformId);
@@ -505,6 +573,8 @@ public class UiController {
       model.addAttribute("autoPrint", autoPrint);
       model.addAttribute("lang", lang);
       model.addAttribute("isAdmin", CurrentUser.isAdmin());
+      model.addAttribute("loggedInEmail", CurrentUser.email());
+      model.addAttribute("loggedInRole", CurrentUser.role());
       model.addAttribute("businessId", businessId);
       model.addAttribute("startDate", startDate);
       model.addAttribute("endDate", endDate);

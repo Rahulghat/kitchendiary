@@ -11,6 +11,7 @@
     <aside class="ad-rail" aria-label="Ad space">
         <div class="ad-slot">
                 <p class="ad-label">Sponsored</p>
+                <button type="button" class="ad-dismiss" aria-label="Dismiss ad">x</button>
                 <div class="ad-media">
                 <strong>Cloud Kitchen Pro</strong>
                 <span>Increase repeat orders by 32%</span>
@@ -31,12 +32,18 @@
             |
             <a th:href="@{/ui/hi(businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category})}">हिंदी UI</a>
         </p>
-        <p th:if="${isAdmin}">
-            <a href="/admin/users">Create User (Admin)</a>
-        </p>
-        <form method="post" action="/logout">
+        <div class="hero-actions">
+            <span class="user-chip" th:text="${loggedInEmail + ' (' + loggedInRole + ')'}">user@example.com (USER)</span>
+            <a class="button-link"
+               th:href="@{/ui/lists(lang='mr',businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy=${ordersSortBy},ordersSortDir=${ordersSortDir},expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=${ordersPage},expensesPage=${expensesPage},pageSize=${pageSize})}"
+               target="_blank" rel="noopener">
+                View Lists
+            </a>
+            <a th:if="${isAdmin}" href="/admin/users" class="button-link">Create User</a>
+            <form method="post" action="/logout" class="inline-form">
                 <button type="submit">Logout</button>
-        </form>
+            </form>
+        </div>
     </header>
 
     <section class="fancy-banner">
@@ -56,10 +63,10 @@
         </div>
     </section>
 
-    <div class="alert ok" th:if="${message != null and !message.isBlank()}" th:text="${message}"></div>
-    <div class="alert err" th:if="${error != null and !error.isBlank()}" th:text="${error}"></div>
+    <div class="alert ok toast" th:if="${message != null and !message.isBlank()}" th:text="${message}"></div>
+    <div class="alert err toast" th:if="${error != null and !error.isBlank()}" th:text="${error}"></div>
 
-    <section class="card">
+    <section class="card filter-card">
         <h2>संदर्भ</h2>
         <form method="get" action="/ui/mr" class="form-grid">
             <label>व्यवसाय
@@ -212,7 +219,10 @@
                 <div><span>कमिशनवरील GST</span><strong th:text="${dashboard.totalGstOnCommission}"></strong></div>
                 <div><span>एकूण अपेक्षित नेट</span><strong th:text="${dashboard.totalNetExpected}"></strong></div>
                 <div><span>एकूण प्रत्यक्ष नेट</span><strong th:text="${dashboard.totalNetReceived}"></strong></div>
-                <div><span>एकूण तफावत</span><strong th:text="${dashboard.totalMismatch}"></strong></div>
+                <a class="kpi-link"
+                   th:href="@{/ui/mr(businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy='mismatchAmount',ordersSortDir='desc',expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=0,expensesPage=${expensesPage},pageSize=${pageSize})}">
+                    <span>एकूण तफावत</span><strong th:text="${dashboard.totalMismatch}"></strong>
+                </a>
                 <div><span>एकूण खर्च</span><strong th:text="${dashboard.totalExpenses}"></strong></div>
                 <div><span>अंदाजे नफा</span><strong th:text="${dashboard.estimatedProfit}"></strong></div>
         </div>
@@ -257,7 +267,7 @@
                 </form>
         </div>
         <div class="table-wrap">
-                <table>
+                <table class="orders-table">
                 <thead>
                 <tr>
                 <th>आयडी</th>
@@ -274,7 +284,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${orders == null or orders.isEmpty()}">
+                <tr class="empty-row" th:if="${orders == null or orders.isEmpty()}">
                 <td colspan="11">निवडलेल्या फिल्टरसाठी ऑर्डर नाहीत.</td>
                 </tr>
                 <tr th:each="o : ${orders}">
@@ -286,7 +296,7 @@
                 <td th:text="${o.gstOnCommission}"></td>
                 <td th:text="${o.netExpected}"></td>
                 <td th:text="${o.netReceived}"></td>
-                <td th:text="${o.mismatchAmount}"></td>
+                <td th:text="${o.mismatchAmount}" th:classappend="${o.mismatchAmount != null and o.mismatchAmount.signum() > 0} ? 'mismatch-pos' : (${o.mismatchAmount != null and o.mismatchAmount.signum() < 0} ? 'mismatch-neg' : '')"></td>
                 <td th:text="${o.notes}"></td>
                 <td>
                 <a th:href="@{/ui/orders/{orderId}/invoice(orderId=${o.id},businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},lang='mr')}">प्रिंट</a>
@@ -344,7 +354,7 @@
                 </form>
         </div>
         <div class="table-wrap">
-                <table>
+                <table class="expenses-table">
                 <thead>
                 <tr>
                 <th>आयडी</th>
@@ -355,7 +365,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${expenses == null or expenses.isEmpty()}">
+                <tr class="empty-row" th:if="${expenses == null or expenses.isEmpty()}">
                 <td colspan="5">निवडलेल्या फिल्टरसाठी खर्च नाहीत.</td>
                 </tr>
                 <tr th:each="e : ${expenses}">

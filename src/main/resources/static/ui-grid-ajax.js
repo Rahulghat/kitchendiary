@@ -3,6 +3,10 @@
 
   function initGridAjax() {
     document.querySelectorAll("form.sort-inline[data-grid]").forEach(function (form) {
+      if (form.dataset.ajaxBound === "1") {
+        return;
+      }
+      form.dataset.ajaxBound = "1";
       form.addEventListener("submit", function (event) {
         event.preventDefault();
         loadGrid(form.getAttribute("action"), new FormData(form), form.dataset.grid);
@@ -10,6 +14,10 @@
     });
 
     document.querySelectorAll(".pager a").forEach(function (link) {
+      if (link.dataset.ajaxBound === "1") {
+        return;
+      }
+      link.dataset.ajaxBound = "1";
       link.addEventListener("click", function (event) {
         var section = link.closest("section.card");
         if (!section) {
@@ -23,6 +31,9 @@
         loadGrid(link.getAttribute("href"), null, sortForm.dataset.grid);
       });
     });
+
+    bindAdDismiss();
+    bindToastAutoHide();
   }
 
   function loadGrid(url, formData, grid) {
@@ -33,6 +44,7 @@
       window.location.href = url;
       return;
     }
+    setLoading(targetCard, true);
 
     var fetchUrl = url;
     if (formData) {
@@ -67,7 +79,56 @@
         })
         .catch(function () {
           window.location.href = fetchUrl;
+        })
+        .finally(function () {
+          setLoading(targetCard, false);
         });
+  }
+
+  function setLoading(card, isLoading) {
+    if (!card) {
+      return;
+    }
+    card.classList.toggle("is-loading", isLoading);
+    card.querySelectorAll("button, select, input, a").forEach(function (el) {
+      if (el.tagName === "A") {
+        el.style.pointerEvents = isLoading ? "none" : "";
+        return;
+      }
+      el.disabled = !!isLoading;
+    });
+  }
+
+  function bindAdDismiss() {
+    var ad = document.querySelector(".ad-rail");
+    if (!ad) {
+      return;
+    }
+    if (sessionStorage.getItem("adDismissed") === "1") {
+      ad.style.display = "none";
+      return;
+    }
+    var btn = ad.querySelector(".ad-dismiss");
+    if (!btn || btn.dataset.bound === "1") {
+      return;
+    }
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", function () {
+      sessionStorage.setItem("adDismissed", "1");
+      ad.style.display = "none";
+    });
+  }
+
+  function bindToastAutoHide() {
+    document.querySelectorAll(".toast").forEach(function (toast) {
+      if (toast.dataset.bound === "1") {
+        return;
+      }
+      toast.dataset.bound = "1";
+      setTimeout(function () {
+        toast.style.display = "none";
+      }, 2800);
+    });
   }
 
   function findGridCard(grid, rootDoc) {

@@ -8,27 +8,41 @@
 </head>
 <body>
 <main class="login-shell">
-    <section class="login-card">
-        <img src="/kitchendiary-logo.svg" alt="KitchenDiary logo" class="login-logo">
-        <h1>KitchenDiary Sign In</h1>
-        <p>Use your registered email and password.</p>
+    <section class="login-card login-card--auth">
+        <div class="login-grid">
+            <div class="login-brand-pane">
+                <img src="/kitchendiary-logo.svg" alt="KitchenDiary logo" class="login-logo">
+                <h1>KitchenDiary</h1>
+                <p>Smart order and expense operations for fast-moving kitchens.</p>
+                <ul class="login-points">
+                    <li>Daily payouts and mismatch tracking</li>
+                    <li>Business-wise cost visibility</li>
+                    <li>Instant invoice and export flow</li>
+                </ul>
+            </div>
 
-        <div class="alert err" th:if="${param.error != null}">
-            Invalid email or password.
-        </div>
-        <div class="alert ok" th:if="${param.logout != null}">
-            You have been logged out.
-        </div>
+            <div class="login-form-pane">
+                <h2>Sign In</h2>
+                <p class="login-subtitle">Use your registered email and password.</p>
 
-        <form method="post" action="/login" class="login-form">
-            <label>Email
-                <input type="email" name="username" required autocomplete="username">
-            </label>
-            <label>Password
-                <input type="password" name="password" required autocomplete="current-password">
-            </label>
-            <button type="submit">Sign In</button>
-        </form>
+                <div class="alert err" th:if="${param.error != null}">
+                    Invalid email or password.
+                </div>
+                <div class="alert ok" th:if="${param.logout != null}">
+                    You have been logged out.
+                </div>
+
+                <form method="post" action="/login" class="login-form">
+                    <label>Email
+                        <input type="email" name="username" required autocomplete="username">
+                    </label>
+                    <label>Password
+                        <input type="password" name="password" required autocomplete="current-password">
+                    </label>
+                    <button type="submit">Sign In</button>
+                </form>
+            </div>
+        </div>
     </section>
 </main>
 </body>

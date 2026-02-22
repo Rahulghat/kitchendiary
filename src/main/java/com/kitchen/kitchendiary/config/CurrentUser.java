@@ -19,6 +19,14 @@ public final class CurrentUser {
     return "ADMIN".equalsIgnoreCase(principal.getRole());
   }
 
+  public static String email() {
+    return requirePrincipal().getEmail();
+  }
+
+  public static String role() {
+    return requirePrincipal().getRole();
+  }
+
   private static AppUserPrincipal requirePrincipal() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if (auth == null || !(auth.getPrincipal() instanceof AppUserPrincipal principal)) {

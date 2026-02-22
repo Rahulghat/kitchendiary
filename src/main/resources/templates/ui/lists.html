@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Context Lists</title>
+    <link rel="stylesheet" href="/ui.css">
+</head>
+<body>
+<div class="page list-window">
+    <header class="hero">
+        <div class="brand">
+            <img src="/kitchendiary-logo.svg" alt="KitchenDiary logo">
+        </div>
+        <h1>Context, Business and Platform Lists</h1>
+        <p>Quick reference view for current filters and master data.</p>
+        <div class="hero-actions">
+            <span class="user-chip" th:text="${loggedInEmail + ' (' + loggedInRole + ')'}">user@example.com (USER)</span>
+            <a class="button-link"
+               th:if="${lang == 'mr'}"
+               th:href="@{/ui/mr(businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy=${ordersSortBy},ordersSortDir=${ordersSortDir},expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=${ordersPage},expensesPage=${expensesPage},pageSize=${pageSize})}">
+                Back
+            </a>
+            <a class="button-link"
+               th:if="${lang == 'hi'}"
+               th:href="@{/ui/hi(businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy=${ordersSortBy},ordersSortDir=${ordersSortDir},expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=${ordersPage},expensesPage=${expensesPage},pageSize=${pageSize})}">
+                Back
+            </a>
+            <a class="button-link"
+               th:if="${lang != 'mr' and lang != 'hi'}"
+               th:href="@{/ui(businessId=${selectedBusinessId},startDate=${startDate},endDate=${endDate},platformId=${selectedPlatformId},category=${category},ordersSortBy=${ordersSortBy},ordersSortDir=${ordersSortDir},expensesSortBy=${expensesSortBy},expensesSortDir=${expensesSortDir},ordersPage=${ordersPage},expensesPage=${expensesPage},pageSize=${pageSize})}">
+                Back
+            </a>
+        </div>
+    </header>
+
+    <div class="columns">
+        <section class="card">
+            <h2>Context</h2>
+            <div class="table-wrap">
+                <table class="expenses-table">
+                    <tbody>
+                    <tr><th>Business ID</th><td th:text="${selectedBusinessId}"></td></tr>
+                    <tr><th>Platform ID</th><td th:text="${selectedPlatformId}"></td></tr>
+                    <tr><th>Start Date</th><td th:text="${startDate}"></td></tr>
+                    <tr><th>End Date</th><td th:text="${endDate}"></td></tr>
+                    <tr><th>Category</th><td th:text="${category}"></td></tr>
+                    <tr><th>Orders Sort</th><td th:text="${ordersSortBy + ' ' + ordersSortDir}"></td></tr>
+                    <tr><th>Expenses Sort</th><td th:text="${expensesSortBy + ' ' + expensesSortDir}"></td></tr>
+                    <tr><th>Orders Page</th><td th:text="${ordersPage}"></td></tr>
+                    <tr><th>Expenses Page</th><td th:text="${expensesPage}"></td></tr>
+                    <tr><th>Page Size</th><td th:text="${pageSize}"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Businesses</h2>
+            <div class="table-wrap">
+                <table class="expenses-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>State</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="empty-row" th:if="${businesses == null or businesses.isEmpty()}">
+                        <td colspan="4">No businesses found.</td>
+                    </tr>
+                    <tr th:each="b : ${businesses}">
+                        <td th:text="${b.id}"></td>
+                        <td th:text="${b.name}"></td>
+                        <td th:text="${b.city}"></td>
+                        <td th:text="${b.state}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <section class="card">
+        <h2>Platforms</h2>
+        <div class="table-wrap">
+            <table class="expenses-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Business ID</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="empty-row" th:if="${platforms == null or platforms.isEmpty()}">
+                    <td colspan="4">No platforms found for selected business.</td>
+                </tr>
+                <tr th:each="p : ${platforms}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.business.id}"></td>
+                    <td th:text="${p.code}"></td>
+                    <td th:text="${p.name}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+</body>
+</html>

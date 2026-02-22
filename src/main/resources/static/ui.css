@@ -86,6 +86,19 @@ body::after {
     text-transform: uppercase;
 }
 
+.ad-dismiss {
+    float: right;
+    margin-top: -26px;
+    border: 0;
+    border-radius: 999px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    background: #fff3e0;
+    color: #9a3412;
+    font-weight: 800;
+}
+
 .ad-media {
     min-height: 300px;
     border-radius: 10px;
@@ -148,7 +161,7 @@ body::after {
 }
 
 .brand img {
-    width: min(320px, 68vw);
+    width: min(420px, 72vw);
     height: auto;
     display: block;
 }
@@ -176,6 +189,29 @@ body::after {
     border-color: var(--accent);
 }
 
+.hero-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.user-chip {
+    border: 1px solid #f3d7b2;
+    background: #fff8ef;
+    color: #7c5a3f;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.inline-form {
+    display: inline;
+    margin: 0;
+}
+
 .login-shell {
     min-height: 100vh;
     display: grid;
@@ -194,7 +230,7 @@ body::after {
 }
 
 .login-logo {
-    width: 150px;
+    width: 190px;
     height: auto;
     margin-bottom: 6px;
 }
@@ -225,6 +261,55 @@ body::after {
     margin-top: 2px;
 }
 
+.login-card--auth {
+    width: min(900px, 96vw);
+    padding: 0;
+    overflow: hidden;
+}
+
+.login-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+}
+
+.login-brand-pane {
+    padding: 30px 26px;
+    background: linear-gradient(145deg, #9a3412, #d97706 58%, #f59e0b);
+    color: #fff8ef;
+}
+
+.login-brand-pane h1 {
+    margin: 10px 0 8px;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.login-brand-pane p {
+    margin: 0;
+    color: #ffedd5;
+}
+
+.login-points {
+    margin: 18px 0 0;
+    padding: 0 0 0 18px;
+    display: grid;
+    gap: 8px;
+    color: #fff3e0;
+}
+
+.login-form-pane {
+    padding: 26px;
+}
+
+.login-form-pane h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.login-subtitle {
+    margin: 6px 0 14px;
+    color: var(--muted);
+}
+
 .admin-users-card {
     width: min(860px, 95vw);
     text-align: left;
@@ -237,6 +322,38 @@ body::after {
 
 .admin-users-table {
     margin-top: 14px;
+}
+
+.list-window {
+    padding-right: 0;
+}
+
+.filter-card {
+    position: sticky;
+    top: 10px;
+    z-index: 8;
+}
+
+.toast {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    min-width: 220px;
+    max-width: min(420px, 92vw);
+    z-index: 60;
+    box-shadow: var(--shadow);
+    animation: reveal 0.25s ease-out both;
+}
+
+.kpi-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid transparent;
+}
+
+.kpi-link:hover {
+    border-color: #f0c892;
 }
 
 .fancy-banner {
@@ -532,6 +649,62 @@ table {
     overflow: hidden;
 }
 
+.orders-table th:nth-child(2),
+.orders-table td:nth-child(2) {
+    white-space: nowrap;
+    min-width: 132px;
+}
+
+.orders-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.expenses-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.orders-table td:nth-child(4),
+.orders-table td:nth-child(5),
+.orders-table td:nth-child(6),
+.orders-table td:nth-child(7),
+.orders-table td:nth-child(8),
+.orders-table td:nth-child(9),
+.expenses-table td:nth-child(4) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.mismatch-pos {
+    color: #9a3412;
+    font-weight: 700;
+}
+
+.mismatch-neg {
+    color: #166534;
+    font-weight: 700;
+}
+
+.empty-row td {
+    text-align: center;
+    color: #7c5a3f;
+    padding: 18px 10px;
+}
+
+.empty-row td::before {
+    content: "No data - ";
+    color: #9a3412;
+    font-weight: 700;
+}
+
+.card.is-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
 th, td {
     border-bottom: 1px solid var(--line);
     text-align: left;
@@ -639,6 +812,8 @@ td a {
 
     .ad-slot {
         position: static;
+        display: grid;
+        grid-template-columns: 1fr;
     }
 
     .ad-media {
@@ -653,12 +828,25 @@ td a {
         grid-template-columns: 1fr;
     }
 
+    .login-grid {
+        grid-template-columns: 1fr;
+    }
+
     .banner-badge {
         width: fit-content;
     }
 
     .section-head {
         flex-wrap: wrap;
+    }
+
+    .filter-card {
+        position: static;
+    }
+
+    .ad-meta,
+    .ad-copy {
+        display: none;
     }
 }
 
